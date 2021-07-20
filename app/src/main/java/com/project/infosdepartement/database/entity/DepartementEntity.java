@@ -1,4 +1,4 @@
-package com.project.infosdepartement.entity;
+package com.project.infosdepartement.database.entity;
 
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;

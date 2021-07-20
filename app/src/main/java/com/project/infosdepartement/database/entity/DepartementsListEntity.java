@@ -1,4 +1,4 @@
-package com.project.infosdepartement.entity;
+package com.project.infosdepartement.database.entity;
 
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
@@ -19,7 +19,7 @@ public class DepartementsListEntity {
     //Boolean saying if the data of a departement has already been fetched
     @NonNull
     @ColumnInfo(name = "areDatasFetched")
-    private final boolean areDatasFetched;
+    private final Boolean areDatasFetched;
     @NonNull
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
