@@ -1,11 +1,11 @@
-package com.project.infosdepartement.dao;
+package com.project.infosdepartement.database.dao;
 
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
-import com.project.infosdepartement.entity.DepartementEntity;
+import com.project.infosdepartement.database.entity.DepartementEntity;
 
 import java.util.List;
 
