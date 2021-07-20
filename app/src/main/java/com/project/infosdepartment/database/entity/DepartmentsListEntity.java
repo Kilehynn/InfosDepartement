@@ -1,21 +1,21 @@
-package com.project.infosdepartement.database.entity;
+package com.project.infosdepartment.database.entity;
 
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName = "departementsList")
-public class DepartementsListEntity {
+@Entity(tableName = "departmentsList")
+public class DepartmentsListEntity {
 
-    //The code of each departement
+    //The code of each department
     @NonNull
     @ColumnInfo(name = "code")
-    private final String departementCode;
-    //The name of each Departement
+    private final String departmentCode;
+    //The name of each Department
     @NonNull
     @ColumnInfo(name = "name")
-    private final String departementName;
+    private final String departmentName;
     //Boolean saying if the data of a departement has already been fetched
     @NonNull
     @ColumnInfo(name = "areDatasFetched")
@@ -25,9 +25,9 @@ public class DepartementsListEntity {
     @ColumnInfo(name = "id")
     private Integer id;
 
-    public DepartementsListEntity(@NonNull String departementCode, @NonNull String departementName) {
-        this.departementCode = departementCode;
-        this.departementName = departementName;
+    public DepartmentsListEntity(@NonNull String departmentCode, @NonNull String departmentName) {
+        this.departmentCode = departmentCode;
+        this.departmentName = departmentName;
         areDatasFetched = false;
     }
 }

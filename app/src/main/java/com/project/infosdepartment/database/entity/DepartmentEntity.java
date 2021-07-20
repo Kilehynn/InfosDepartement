@@ -1,4 +1,4 @@
-package com.project.infosdepartement.database.entity;
+package com.project.infosdepartment.database.entity;
 
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
@@ -6,23 +6,23 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 //Creation of an entity that stocks all the infos about a departement
-@Entity(tableName = "departements")
-public class DepartementEntity {
+@Entity(tableName = "departments")
+public class DepartmentEntity {
 
     //PrimaryKey of our DB
     @PrimaryKey(autoGenerate = true)
     @NonNull
     private Integer id;
 
-    //The code of each departement
+    //The code of each department
     @NonNull
     @ColumnInfo(name = "code")
-    private final String departementCode;
+    private final String departmentCode;
 
-    //The name of each Departement
+    //The name of each department
     @NonNull
     @ColumnInfo(name = "name")
-    private final String departementName;
+    private final String departmentName;
 
     @ColumnInfo(name = "inhabitants")
     private Integer inhabitants;
@@ -30,9 +30,9 @@ public class DepartementEntity {
     @ColumnInfo(name = "number_towns")
     private Integer nbTowns;
 
-    public DepartementEntity(@NonNull String departementCode, @NonNull String nomDepartement, Integer population, Integer nbTowns) {
-        this.departementCode = departementCode;
-        this.departementName = nomDepartement;
+    public DepartmentEntity(@NonNull String departmentCode, @NonNull String nomDepartement, Integer population, Integer nbTowns) {
+        this.departmentCode = departmentCode;
+        this.departmentName = nomDepartement;
         this.inhabitants = population;
         this.nbTowns = nbTowns;
     }
@@ -42,13 +42,13 @@ public class DepartementEntity {
     }
 
     @NonNull
-    public String getDepartementCode() {
-        return departementCode;
+    public String getDepartmentCode() {
+        return departmentCode;
     }
 
     @NonNull
-    public String getDepartementName() {
-        return departementName;
+    public String getDepartmentName() {
+        return departmentName;
     }
 
     public int getInhabitants() {

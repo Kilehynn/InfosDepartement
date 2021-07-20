@@ -1,10 +1,10 @@
-package com.project.infosdepartement.views;
+package com.project.infosdepartment.views;
 
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.project.infosdepartement.R;
+import com.project.infosdepartment.R;
 
 public class MainActivity extends AppCompatActivity {
 

@@ -1,4 +1,4 @@
-package com.project.infosdepartement.database;
+package com.project.infosdepartment.database;
 
 import android.content.Context;
 
@@ -8,16 +8,16 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-import com.project.infosdepartement.database.dao.DepartementsDao;
-import com.project.infosdepartement.database.dao.DepartementsListDao;
-import com.project.infosdepartement.database.entity.DepartementEntity;
-import com.project.infosdepartement.database.entity.DepartementsListEntity;
+import com.project.infosdepartment.database.dao.DepartmentsDao;
+import com.project.infosdepartment.database.dao.DepartmentsListDao;
+import com.project.infosdepartment.database.entity.DepartmentEntity;
+import com.project.infosdepartment.database.entity.DepartmentsListEntity;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 //Create our database with 2 tables, one for each Entity
-@Database(entities = {DepartementEntity.class, DepartementsListEntity.class}, version = 1, exportSchema = false)
+@Database(entities = {DepartmentEntity.class, DepartmentsListEntity.class}, version = 1, exportSchema = false)
 public abstract class DepartementDatabase extends RoomDatabase {
 
     private static final int NUMBER_OF_THREADS = 4;
@@ -44,9 +44,9 @@ public abstract class DepartementDatabase extends RoomDatabase {
         return instance;
     }
 
-    public abstract DepartementsDao departementsDao();
+    public abstract DepartmentsDao departementsDao();
 
-    public abstract DepartementsListDao departementsListDao();
+    public abstract DepartmentsListDao departementsListDao();
 }
 
 
