@@ -2,10 +2,14 @@ package com.project.infosdepartement.database;
 
 import android.content.Context;
 
+import androidx.annotation.NonNull;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
+import androidx.sqlite.db.SupportSQLiteDatabase;
 
+import com.project.infosdepartement.database.dao.DepartementsDao;
+import com.project.infosdepartement.database.dao.DepartementsListDao;
 import com.project.infosdepartement.database.entity.DepartementEntity;
 import com.project.infosdepartement.database.entity.DepartementsListEntity;
 
@@ -19,9 +23,15 @@ public abstract class DepartementDatabase extends RoomDatabase {
     private static final int NUMBER_OF_THREADS = 4;
     static final ExecutorService databaseWriteExecutor =
             Executors.newFixedThreadPool(NUMBER_OF_THREADS);
+    private static RoomDatabase.Callback sRoomDatabaseCallback = new RoomDatabase.Callback() {
+        @Override
+        public void onCreate(@NonNull SupportSQLiteDatabase db) {
+            super.onCreate(db);
+        }
+    };
     private static volatile DepartementDatabase instance = null;
 
-    static DepartementDatabase getDatabase(final Context context) {
+    public static DepartementDatabase getDatabase(final Context context) {
         if (instance == null) {
             synchronized (DepartementDatabase.class) {
                 if (instance == null) {
@@ -33,4 +43,11 @@ public abstract class DepartementDatabase extends RoomDatabase {
         }
         return instance;
     }
+
+    public abstract DepartementsDao departementsDao();
+
+    public abstract DepartementsListDao departementsListDao();
 }
+
+
+
