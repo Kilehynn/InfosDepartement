@@ -13,10 +13,11 @@ import java.util.List;
 public interface DepartmentsDao {
 
     @Query("SELECT * FROM departments")
-    List<DepartmentEntity> getDepartements();
+    List<DepartmentEntity> getDepartments();
 
     @Query("SELECT * FROM departments WHERE code == :departmentCode")
-    DepartmentEntity getDepartement(String departmentCode);
+    DepartmentEntity getDepartmentFromCode(String departmentCode);
+
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insert(DepartmentEntity... departementEntities);

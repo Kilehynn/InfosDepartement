@@ -12,18 +12,21 @@ import java.util.List;
 public interface DepartmentsListDao {
 
     @Query("SELECT * FROM departmentsList")
-    List<DepartmentsListEntity> getDepartements();
+    List<DepartmentsListEntity> getDepartments();
 
-    @Query("SELECT * FROM departmentsList WHERE code == :departementCode")
-    DepartmentsListEntity getDepartement(String departementCode);
+    @Query("SELECT * FROM departmentsList WHERE code == :departmentCode")
+    DepartmentsListEntity getDepartment(String departmentCode);
+
+    @Query("SELECT areDatasFetched FROM departmentsList WHERE code == :departmentCode")
+    Boolean getIfDataFetched(String departmentCode);
 
     @Update
-    void updateEntities(DepartmentsListEntity... departementsListEntities);
+    void updateEntities(DepartmentsListEntity... departmentsListEntities);
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    void insert(DepartmentsListEntity... departementsListEntities);
+    void insert(DepartmentsListEntity... departmentsListEntities);
 
-    @Query("UPDATE departmentsList SET areDatasFetched = 'TRUE' WHERE code == :departementCode")
-    DepartmentsListEntity updateBoolDepartement(String departementCode);
+    @Query("UPDATE departmentsList SET areDatasFetched = 'TRUE' WHERE code == :departmentCode")
+    DepartmentsListEntity updateBoolDepartment(String departmentCode);
 
 }
