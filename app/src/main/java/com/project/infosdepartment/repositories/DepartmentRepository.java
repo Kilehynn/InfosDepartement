@@ -5,6 +5,7 @@ import android.app.Application;
 import com.project.infosdepartment.database.DepartmentDatabase;
 import com.project.infosdepartment.database.dao.DepartmentsDao;
 import com.project.infosdepartment.database.dao.DepartmentsListDao;
+import com.project.infosdepartment.database.entity.DepartmentEntity;
 
 public class DepartmentRepository {
 
@@ -20,6 +21,18 @@ public class DepartmentRepository {
         DepartmentDatabase db = DepartmentDatabase.getDatabase(application);
         this.departmentsDao = db.departmentsDao();
         this.departmentsListDao = db.departmentsListDao();
+    }
+
+    public DepartmentEntity fetchInfos(String code) {
+        return null;
+    }
+
+    public DepartmentEntity getDepartmentInfo(String code) {
+        if (departmentsListDao.getIfDataFetched(code)) {
+            return departmentsDao.getDepartmentFromCode(code);
+        } else {
+            return fetchInfos(code);
+        }
     }
 
     public static String getUrl() {
@@ -41,4 +54,5 @@ public class DepartmentRepository {
     public static String getUrlDepartmentEndpoint() {
         return url + departmentEndpoint;
     }
+
 }
