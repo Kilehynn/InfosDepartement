@@ -9,18 +9,21 @@ import androidx.room.PrimaryKey;
 @Entity(tableName = "departements")
 public class DepartementEntity {
 
-    //The code of each departement
-    @NonNull
-    @ColumnInfo(name = "code")
-    private final String departementCode;
-    //The name of each Departement
-    @NonNull
-    @ColumnInfo(name = "name")
-    private final String departementName;
     //PrimaryKey of our DB
     @PrimaryKey(autoGenerate = true)
     @NonNull
     private Integer id;
+
+    //The code of each departement
+    @NonNull
+    @ColumnInfo(name = "code")
+    private final String departementCode;
+
+    //The name of each Departement
+    @NonNull
+    @ColumnInfo(name = "name")
+    private final String departementName;
+
     @ColumnInfo(name = "inhabitants")
     private Integer inhabitants;
 
