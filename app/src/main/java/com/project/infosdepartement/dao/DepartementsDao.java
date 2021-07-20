@@ -14,5 +14,5 @@ public interface DepartementsDao {
     List<DepartementEntity> getDepartements();
 
     @Query("SELECT * FROM departements WHERE code == :departementCode")
-    DepartementEntity getDepartement(int departementCode);
+    DepartementEntity getDepartement(String departementCode);
 }
