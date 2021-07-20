@@ -1,5 +1,7 @@
 package com.project.infosdepartement.dao;
 
+import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
@@ -17,6 +19,9 @@ public interface DepartementsListDao {
 
     @Update
     void updateEntities(DepartementsListEntity... departementsListEntities);
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    void insert(DepartementsListEntity... departementsListEntities);
 
     @Query("UPDATE departementsList SET areDatasFetched = 'TRUE' WHERE code == :departementCode")
     DepartementsListEntity updateBoolDepartement(String departementCode);
