@@ -1,5 +1,6 @@
 package com.project.infosdepartment.database.dao;
 
+import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
@@ -9,6 +10,7 @@ import com.project.infosdepartment.database.entity.DepartmentsListEntity;
 
 import java.util.List;
 
+@Dao
 public interface DepartmentsListDao {
 
     @Query("SELECT * FROM departmentsList")
@@ -17,7 +19,7 @@ public interface DepartmentsListDao {
     @Query("SELECT * FROM departmentsList WHERE code == :departmentCode")
     DepartmentsListEntity getDepartment(String departmentCode);
 
-    @Query("SELECT areDatasFetched FROM departmentsList WHERE code == :departmentCode")
+    @Query("SELECT areDataFetched FROM departmentsList WHERE code == :departmentCode")
     Boolean getIfDataFetched(String departmentCode);
 
     @Update
@@ -26,7 +28,7 @@ public interface DepartmentsListDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insert(DepartmentsListEntity... departmentsListEntities);
 
-    @Query("UPDATE departmentsList SET areDatasFetched = 'TRUE' WHERE code == :departmentCode")
-    DepartmentsListEntity updateBoolDepartment(String departmentCode);
+    @Query("UPDATE departmentsList SET areDataFetched = 'TRUE' WHERE code == :departmentCode")
+    void updateBoolDepartment(String departmentCode);
 
 }

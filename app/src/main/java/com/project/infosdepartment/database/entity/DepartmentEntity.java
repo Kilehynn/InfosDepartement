@@ -30,10 +30,10 @@ public class DepartmentEntity {
     @ColumnInfo(name = "number_towns")
     private Integer nbTowns;
 
-    public DepartmentEntity(@NonNull String departmentCode, @NonNull String nomDepartement, Integer population, Integer nbTowns) {
+    public DepartmentEntity(@NonNull String departmentCode, @NonNull String departmentName, Integer inhabitants, Integer nbTowns) {
         this.departmentCode = departmentCode;
-        this.departmentName = nomDepartement;
-        this.inhabitants = population;
+        this.departmentName = departmentName;
+        this.inhabitants = inhabitants;
         this.nbTowns = nbTowns;
     }
 
@@ -58,4 +58,9 @@ public class DepartmentEntity {
     public int getNbTowns() {
         return nbTowns;
     }
+
+    public void setId(@NonNull Integer id) {
+        this.id = id;
+    }
+
 }
