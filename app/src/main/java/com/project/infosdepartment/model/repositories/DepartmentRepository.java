@@ -4,6 +4,8 @@ import android.app.Application;
 import android.content.Context;
 import android.util.Log;
 
+import androidx.lifecycle.LiveData;
+
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonArrayRequest;
@@ -12,7 +14,10 @@ import com.project.infosdepartment.model.database.DepartmentDatabase;
 import com.project.infosdepartment.model.database.dao.DepartmentsDao;
 import com.project.infosdepartment.model.database.dao.DepartmentsListDao;
 import com.project.infosdepartment.model.database.entity.DepartmentEntity;
+import com.project.infosdepartment.model.database.entity.DepartmentsListEntity;
 import com.project.infosdepartment.model.utils.FetchInfoCallback;
+
+import java.util.List;
 
 public class DepartmentRepository {
 
@@ -74,4 +79,47 @@ public class DepartmentRepository {
         }
     }
 
+    public LiveData<List<DepartmentsListEntity>> getDepartmentsList() {
+        return departmentsListDao.getDepartmentsList();
+    }
+
+    public void insert(DepartmentsListEntity departmentsListEntity) {
+        DepartmentDatabase.getDatabaseWriteExecutor().execute(() -> departmentsListDao.insert(departmentsListEntity));
+    }
+
+    public DepartmentsListEntity getDepartment(String departmentCode) {
+        return departmentsListDao.getDepartment(departmentCode);
+    }
+
+    public Boolean getIfDataFetched(String departmentCode) {
+        return departmentsListDao.getIfDataFetched(departmentCode);
+    }
+
+    public void updateEntities(DepartmentsListEntity departmentsListEntity) {
+        departmentsListDao.updateEntities(departmentsListEntity);
+    }
+
+    public void setTrueBoolDepartment(String departmentCode) {
+        departmentsListDao.setTrueBoolDepartment(departmentCode);
+    }
+
+    public void resetBoolDepartment() {
+        departmentsListDao.resetBoolDepartment();
+    }
+
+    public List<DepartmentEntity> getDepartments() {
+        return departmentsDao.getDepartments();
+    }
+
+    public DepartmentEntity getDepartmentFromCode(String departmentCode) {
+        return departmentsDao.getDepartmentFromCode(departmentCode);
+    }
+
+    public void deleteAll() {
+        departmentsDao.deleteAll();
+    }
+
+    public void insert(DepartmentEntity departementEntity) {
+        departmentsDao.insert(departementEntity);
+    }
 }

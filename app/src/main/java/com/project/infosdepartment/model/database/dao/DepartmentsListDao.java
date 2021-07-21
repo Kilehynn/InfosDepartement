@@ -15,7 +15,7 @@ import java.util.List;
 public interface DepartmentsListDao {
 
     @Query("SELECT * FROM departmentsList")
-    LiveData<List<DepartmentsListEntity>> getDepartments();
+    LiveData<List<DepartmentsListEntity>> getDepartmentsList();
 
     @Query("SELECT * FROM departmentsList WHERE code == :departmentCode")
     DepartmentsListEntity getDepartment(String departmentCode);

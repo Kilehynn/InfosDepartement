@@ -31,7 +31,7 @@ public abstract class DepartmentDatabase extends RoomDatabase {
 
     private static final int NUMBER_OF_THREADS = 4;
     private static Context ctx;
-    static final ExecutorService databaseWriteExecutor =
+    private static final ExecutorService databaseWriteExecutor =
             Executors.newFixedThreadPool(NUMBER_OF_THREADS);
     private static volatile DepartmentDatabase instance = null;
     private static final RoomDatabase.Callback sRoomDatabaseCallback = new RoomDatabase.Callback() {
@@ -84,6 +84,10 @@ public abstract class DepartmentDatabase extends RoomDatabase {
     public abstract DepartmentsDao departmentsDao();
 
     public abstract DepartmentsListDao departmentsListDao();
+
+    public static ExecutorService getDatabaseWriteExecutor() {
+        return databaseWriteExecutor;
+    }
 }
 
 
