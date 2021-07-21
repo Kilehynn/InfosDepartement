@@ -19,6 +19,10 @@ public interface DepartmentsDao {
     DepartmentEntity getDepartmentFromCode(String departmentCode);
 
 
+    @Query("DELETE FROM departments")
+    void deleteAll();
+
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insert(DepartmentEntity... departementEntities);
 }

@@ -29,6 +29,8 @@ public interface DepartmentsListDao {
     void insert(DepartmentsListEntity... departmentsListEntities);
 
     @Query("UPDATE departmentsList SET areDataFetched = 'TRUE' WHERE code == :departmentCode")
-    void updateBoolDepartment(String departmentCode);
+    void setTrueBoolDepartment(String departmentCode);
 
+    @Query("UPDATE departmentsList SET areDataFetched = 'FALSE'")
+    void resetBoolDepartment();
 }
