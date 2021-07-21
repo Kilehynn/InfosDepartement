@@ -1,4 +1,4 @@
-package com.project.infosdepartment.repositories;
+package com.project.infosdepartment.model.repositories;
 
 import android.app.Application;
 import android.content.Context;
@@ -8,11 +8,11 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
-import com.project.infosdepartment.database.DepartmentDatabase;
-import com.project.infosdepartment.database.dao.DepartmentsDao;
-import com.project.infosdepartment.database.dao.DepartmentsListDao;
-import com.project.infosdepartment.database.entity.DepartmentEntity;
-import com.project.infosdepartment.utils.FetchInfoCallback;
+import com.project.infosdepartment.model.database.DepartmentDatabase;
+import com.project.infosdepartment.model.database.dao.DepartmentsDao;
+import com.project.infosdepartment.model.database.dao.DepartmentsListDao;
+import com.project.infosdepartment.model.database.entity.DepartmentEntity;
+import com.project.infosdepartment.model.utils.FetchInfoCallback;
 
 public class DepartmentRepository {
 

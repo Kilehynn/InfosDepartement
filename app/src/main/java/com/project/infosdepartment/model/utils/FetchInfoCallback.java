@@ -1,9 +1,9 @@
-package com.project.infosdepartment.utils;
+package com.project.infosdepartment.model.utils;
 
 import android.util.Log;
 
-import com.project.infosdepartment.database.dao.DepartmentsDao;
-import com.project.infosdepartment.database.entity.DepartmentEntity;
+import com.project.infosdepartment.model.database.dao.DepartmentsDao;
+import com.project.infosdepartment.model.database.entity.DepartmentEntity;
 
 import org.json.JSONArray;
 import org.json.JSONException;

@@ -1,4 +1,4 @@
-package com.project.infosdepartment.database.entity;
+package com.project.infosdepartment.model.database.entity;
 
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
@@ -25,10 +25,10 @@ public class DepartmentEntity {
     private final String departmentName;
 
     @ColumnInfo(name = "inhabitants")
-    private Integer inhabitants;
+    private final Integer inhabitants;
 
     @ColumnInfo(name = "number_towns")
-    private Integer nbTowns;
+    private final Integer nbTowns;
 
     public DepartmentEntity(@NonNull String departmentCode, @NonNull String departmentName, Integer inhabitants, Integer nbTowns) {
         this.departmentCode = departmentCode;

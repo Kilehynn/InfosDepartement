@@ -1,4 +1,4 @@
-package com.project.infosdepartment.database;
+package com.project.infosdepartment.model.database;
 
 import android.content.Context;
 import android.util.Log;
@@ -13,11 +13,11 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
-import com.project.infosdepartment.database.dao.DepartmentsDao;
-import com.project.infosdepartment.database.dao.DepartmentsListDao;
-import com.project.infosdepartment.database.entity.DepartmentEntity;
-import com.project.infosdepartment.database.entity.DepartmentsListEntity;
-import com.project.infosdepartment.repositories.DepartmentRepository;
+import com.project.infosdepartment.model.database.dao.DepartmentsDao;
+import com.project.infosdepartment.model.database.dao.DepartmentsListDao;
+import com.project.infosdepartment.model.database.entity.DepartmentEntity;
+import com.project.infosdepartment.model.database.entity.DepartmentsListEntity;
+import com.project.infosdepartment.model.repositories.DepartmentRepository;
 
 import org.json.JSONException;
 import org.json.JSONObject;

@@ -1,12 +1,13 @@
-package com.project.infosdepartment.database.dao;
+package com.project.infosdepartment.model.database.dao;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
-import com.project.infosdepartment.database.entity.DepartmentsListEntity;
+import com.project.infosdepartment.model.database.entity.DepartmentsListEntity;
 
 import java.util.List;
 
@@ -14,7 +15,7 @@ import java.util.List;
 public interface DepartmentsListDao {
 
     @Query("SELECT * FROM departmentsList")
-    List<DepartmentsListEntity> getDepartments();
+    LiveData<List<DepartmentsListEntity>> getDepartments();
 
     @Query("SELECT * FROM departmentsList WHERE code == :departmentCode")
     DepartmentsListEntity getDepartment(String departmentCode);
