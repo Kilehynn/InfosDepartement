@@ -11,7 +11,6 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 import com.project.infosdepartment.database.dao.DepartmentsDao;
@@ -20,7 +19,6 @@ import com.project.infosdepartment.database.entity.DepartmentEntity;
 import com.project.infosdepartment.database.entity.DepartmentsListEntity;
 import com.project.infosdepartment.repositories.DepartmentRepository;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -43,32 +41,28 @@ public abstract class DepartmentDatabase extends RoomDatabase {
 
             RequestQueue requestQueue = Volley.newRequestQueue(ctx);
             String url = DepartmentRepository.getUrlDepartmentEndpoint();
-            JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
+            JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null, response -> {
+                for (int i = 0; i < response.length(); i++) {
+                    try {
+                        JSONObject current = response.getJSONObject(i);
 
-                @Override
-                public void onResponse(JSONArray response) {
-                    for (int i = 0; i < response.length(); i++) {
-                        try {
-                            JSONObject current = response.getJSONObject(i);
+                        String departmentName = current.getString("nom");
+                        String departmentCode = current.getString("code");
 
-                            String departmentName = current.getString("nom");
-                            String departmentCode = current.getString("code");
+                        DepartmentsListDao departmentsListDao = instance.departmentsListDao();
+                        DepartmentsListEntity departmentEntity = new DepartmentsListEntity(departmentCode, departmentName);
+                        departmentsListDao.insert(departmentEntity);
 
-                            DepartmentsListDao departmentsListDao = instance.departmentsListDao();
-                            DepartmentsListEntity departmentEntity = new DepartmentsListEntity(departmentCode, departmentName);
-                            departmentsListDao.insert(departmentEntity);
-
-                        } catch (JSONException e) {
-                            Log.e("[ERROR][DepartmentDatabase]", "onResponse: An error occurred when populating the database.");
-                            // TODO: Handle error
-                        }
+                    } catch (JSONException e) {
+                        Log.e("[ERROR][DepartmentDatabase]", "onResponse: An error occurred when populating the database.");
+                        // TODO: Handle error
                     }
-
                 }
+
             }, error -> {
                 // TODO: Handle error
             });
-
+            requestQueue.add(jsonArrayRequest);
         }
     };
 
