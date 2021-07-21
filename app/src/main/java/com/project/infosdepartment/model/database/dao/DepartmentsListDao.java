@@ -26,7 +26,7 @@ public interface DepartmentsListDao {
     @Update
     void updateEntities(DepartmentsListEntity... departmentsListEntities);
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(DepartmentsListEntity... departmentsListEntities);
 
     @Query("UPDATE departmentsList SET areDataFetched = 'TRUE' WHERE code == :departmentCode")

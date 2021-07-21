@@ -107,19 +107,12 @@ public class DepartmentRepository {
         departmentsListDao.resetBoolDepartment();
     }
 
-    public List<DepartmentEntity> getDepartments() {
-        return departmentsDao.getDepartments();
-    }
-
-    public DepartmentEntity getDepartmentFromCode(String departmentCode) {
-        return departmentsDao.getDepartmentFromCode(departmentCode);
-    }
-
     public void deleteAll() {
         departmentsDao.deleteAll();
     }
 
-    public void insert(DepartmentEntity departementEntity) {
-        departmentsDao.insert(departementEntity);
+    public void resetCache() {
+        resetBoolDepartment();
+        deleteAll();
     }
 }
