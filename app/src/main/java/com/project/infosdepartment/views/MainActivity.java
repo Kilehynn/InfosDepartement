@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.project.infosdepartment.R;
-import com.project.infosdepartment.model.database.DepartmentDatabase;
 import com.project.infosdepartment.viewmodel.DepartmentViewModel;
 
 public class MainActivity extends AppCompatActivity {
@@ -18,7 +17,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        DepartmentDatabase.getDatabase(this);
         RecyclerView recyclerView = findViewById(R.id.recyclerview);
         final DepartmentListAdapter adapter = new DepartmentListAdapter(new DepartmentListAdapter.DepartmentDiff());
         recyclerView.setAdapter(adapter);

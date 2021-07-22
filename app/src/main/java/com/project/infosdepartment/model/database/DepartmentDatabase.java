@@ -33,72 +33,79 @@ public abstract class DepartmentDatabase extends RoomDatabase {
             Executors.newFixedThreadPool(NUMBER_OF_THREADS);
     private static volatile DepartmentDatabase instance = null;
 
-    public static DepartmentDatabase getDatabase(final Context context) {
 
-        Log.i("[INFO][DepartmentDatabase]", "getDatabase: getSingleton.");
+    //TODO : Tried to do it with a callback, but couldn't make it work, to investigate
+ /*   private static final RoomDatabase.Callback sRoomDatabaseCallback = new RoomDatabase.Callback() {
+        @Override
+        public void onCreate(@NonNull SupportSQLiteDatabase db) {
+            super.onCreate(db);
+
+            RequestQueue requestQueue = Volley.newRequestQueue(ctx);
+            String url = DepartmentRepository.getUrlDepartmentEndpoint();
+            JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null, response -> {
+                for (int i = 0; i < response.length(); i++) {
+                    try {
+                        JSONObject current = response.getJSONObject(i);
+
+                        String departmentName = current.getString("nom");
+                        String departmentCode = current.getString("code");
+
+                        DepartmentsListDao departmentsListDao = instance.departmentsListDao();
+                        databaseWriteExecutor.execute(() -> {
+                            DepartmentsListEntity departmentEntity = new DepartmentsListEntity(departmentCode, departmentName);
+                            departmentsListDao.insert(departmentEntity);
+                        });
+
+                    } catch (JSONException e) {
+                        Log.e("[ERROR][DepartmentDatabase]", "onResponse: An error occurred when populating the database.");
+                        // TODO: Handle error
+                    }
+                }
+
+            }, error -> {
+                // TODO: Handle error
+            });
+            requestQueue.add(jsonArrayRequest);
+        }
+    };*/
+
+    public static DepartmentDatabase getDatabase(final Context context) {
         if (instance == null) {
             synchronized (DepartmentDatabase.class) {
                 if (instance == null) {
                     ctx = context;
-
-                    Log.i("[INFO][DepartmentDatabase]", "getDatabase: create DB.");
                     instance = Room.databaseBuilder(context.getApplicationContext(),
                             DepartmentDatabase.class, "departement_database")
-                            //.addCallback(sRoomDatabaseCallback)
+                            //  .addCallback(sRoomDatabaseCallback)
                             .build();
                     instance.fillDB();
-
                 }
             }
         }
         return instance;
     }
 
-    /*
-        private static RoomDatabase.Callback sRoomDatabaseCallback = new RoomDatabase.Callback() {
-
-            @Override
-            public void onCreate(@NonNull SupportSQLiteDatabase db) {
-                super.onCreate(db);
-               // for (int i = 0; i < 100; i++)
-                 //   System.err.println("Hey, hello");
-                databaseWriteExecutor.execute(() -> {
-
-                });
-            }
-
-            @Override
-            public void onOpen(@NonNull SupportSQLiteDatabase db) {
-                super.onOpen(db);
-                for (int i = 0; i < 100; i++)
-                    System.err.println("Hey, hello, onOpen");
-            }
-        };
-    */
     private void fillDB() {
-        Log.i("[INFO][DepartmentDatabase]", "Callback: Populating database.");
+        Log.i("[INFO][DepartmentDatabase]", "FillDB: Populating database.");
         RequestQueue requestQueue = Volley.newRequestQueue(ctx);
         String url = DepartmentRepository.getUrlDepartmentEndpoint();
         DepartmentsListDao departmentsListDao = instance.departmentsListDao();
-
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null, response -> {
             for (int i = 0; i < response.length(); i++) {
                 try {
                     JSONObject current = response.getJSONObject(i);
-
                     String departmentName = current.getString("nom");
                     String departmentCode = current.getString("code");
-
-                    Log.i("[INFO][DepartmentDatabase]", "Callback: Create Department Entity.");
-                    DepartmentsListEntity departmentEntity = new DepartmentsListEntity(departmentCode, departmentName);
-                    departmentsListDao.insert(departmentEntity);
-
+                    Log.i("[INFO][DepartmentDatabase]", "onResponse: Create Department Entity.");
+                    databaseWriteExecutor.execute(() -> {
+                        DepartmentsListEntity departmentEntity = new DepartmentsListEntity(departmentCode, departmentName);
+                        departmentsListDao.insert(departmentEntity);
+                    });
                 } catch (JSONException e) {
                     Log.e("[ERROR][DepartmentDatabase]", "onResponse: An error occurred when populating the database.");
                     // TODO: Handle error
                 }
             }
-
         }, error -> {
             // TODO: Handle error
         });

@@ -1,5 +1,7 @@
 package com.project.infosdepartment.model.database.entity;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
@@ -29,6 +31,7 @@ public class DepartmentsListEntity {
         this.departmentCode = departmentCode;
         this.departmentName = departmentName;
         areDataFetched = false;
+        Log.i("[INFO][DepartmentsListEntity]", "Ctr : department number " + departmentCode + " , " + departmentName + " has been added to the database");
     }
 
     @NonNull
