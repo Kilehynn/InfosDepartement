@@ -18,11 +18,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         RecyclerView recyclerView = findViewById(R.id.recyclerview);
-        final DepartmentListAdapter adapter = new DepartmentListAdapter(new DepartmentListAdapter.DepartmentDiff());
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         departmentViewModel = new ViewModelProvider(this).get(DepartmentViewModel.class);
-        departmentViewModel.getDepartmentsListEntity().observe(this, adapter::submitList);
+
+        final DepartmentListAdapter adapter = new DepartmentListAdapter(new DepartmentListAdapter.DepartmentDiff());
+
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        adapter.submitList(departmentViewModel.getDepartmentsListEntity());
+        departmentViewModel.cleanDatabase();
     }
 }

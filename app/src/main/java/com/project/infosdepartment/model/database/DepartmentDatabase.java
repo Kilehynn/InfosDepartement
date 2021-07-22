@@ -20,6 +20,8 @@ import com.project.infosdepartment.model.repositories.DepartmentRepository;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -79,6 +81,7 @@ public abstract class DepartmentDatabase extends RoomDatabase {
                             //  .addCallback(sRoomDatabaseCallback)
                             .build();
                     instance.fillDB();
+
                 }
             }
         }
@@ -86,30 +89,44 @@ public abstract class DepartmentDatabase extends RoomDatabase {
     }
 
     private void fillDB() {
-        Log.i("[INFO][DepartmentDatabase]", "FillDB: Populating database.");
+
         RequestQueue requestQueue = Volley.newRequestQueue(ctx);
         String url = DepartmentRepository.getUrlDepartmentEndpoint();
         DepartmentsListDao departmentsListDao = instance.departmentsListDao();
-        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null, response -> {
-            for (int i = 0; i < response.length(); i++) {
-                try {
-                    JSONObject current = response.getJSONObject(i);
-                    String departmentName = current.getString("nom");
-                    String departmentCode = current.getString("code");
-                    Log.i("[INFO][DepartmentDatabase]", "onResponse: Create Department Entity.");
-                    databaseWriteExecutor.execute(() -> {
-                        DepartmentsListEntity departmentEntity = new DepartmentsListEntity(departmentCode, departmentName);
-                        departmentsListDao.insert(departmentEntity);
-                    });
-                } catch (JSONException e) {
-                    Log.e("[ERROR][DepartmentDatabase]", "onResponse: An error occurred when populating the database.");
+        databaseWriteExecutor.execute(() -> {
+            List<DepartmentsListEntity> anyDepartment = new ArrayList<>();
+            anyDepartment = departmentsListDao.getAnyDepartment();
+            if (anyDepartment.isEmpty()) {
+                Log.i("[INFO][DepartmentDatabase]", "FillDB: Populating database.");
+                JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null, response -> {
+                    for (int i = 0; i < response.length(); i++) {
+                        try {
+                            JSONObject current = response.getJSONObject(i);
+                            String departmentName = current.getString("nom");
+                            String departmentCode = current.getString("code");
+                            Log.i("[INFO][DepartmentDatabase]", "onResponse: Create Department Entity.");
+                            DepartmentsListEntity departmentEntity = new DepartmentsListEntity(departmentCode, departmentName);
+                            databaseWriteExecutor.execute(() -> {
+                                departmentsListDao.insert(departmentEntity);
+                            });
+
+                        } catch (JSONException e) {
+                            Log.e("[ERROR][DepartmentDatabase]", "onResponse: An error occurred when populating the database.");
+                            // TODO: Handle error
+                        }
+                    }
+                }, error -> {
                     // TODO: Handle error
-                }
+                });
+                requestQueue.add(jsonArrayRequest);
+            } else {
+
+                Log.i("[INFO][DepartmentDatabase]", "FillDB: Database is full.");
             }
-        }, error -> {
-            // TODO: Handle error
+
         });
-        requestQueue.add(jsonArrayRequest);
+
+
     }
 
     public abstract DepartmentsDao departmentsDao();

@@ -4,7 +4,6 @@ import android.app.Application;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
-import androidx.lifecycle.LiveData;
 
 import com.project.infosdepartment.model.database.entity.DepartmentEntity;
 import com.project.infosdepartment.model.database.entity.DepartmentsListEntity;
@@ -15,7 +14,7 @@ import java.util.List;
 public class DepartmentViewModel extends AndroidViewModel {
 
     private final DepartmentRepository departmentRepository;
-    private final LiveData<List<DepartmentsListEntity>> departmentsListEntity;
+    private final List<DepartmentsListEntity> departmentsListEntity;
 
     public DepartmentViewModel(@NonNull Application application) {
         super(application);
@@ -27,6 +26,11 @@ public class DepartmentViewModel extends AndroidViewModel {
         departmentRepository.setTrueBoolDepartment(departmentCode);
     }
 
+    public void cleanDatabase() {
+        departmentRepository.deleteAll();
+
+    }
+
     public DepartmentEntity getDepartmentInfo(String departmentCode) {
         return departmentRepository.getDepartmentInfo(departmentCode);
     }
@@ -35,7 +39,7 @@ public class DepartmentViewModel extends AndroidViewModel {
         departmentRepository.resetCache();
     }
 
-    public LiveData<List<DepartmentsListEntity>> getDepartmentsListEntity() {
+    public List<DepartmentsListEntity> getDepartmentsListEntity() {
         return departmentsListEntity;
     }
 }

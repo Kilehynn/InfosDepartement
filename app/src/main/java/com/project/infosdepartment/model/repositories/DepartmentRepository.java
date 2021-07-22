@@ -4,8 +4,6 @@ import android.app.Application;
 import android.content.Context;
 import android.util.Log;
 
-import androidx.lifecycle.LiveData;
-
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonArrayRequest;
@@ -18,6 +16,7 @@ import com.project.infosdepartment.model.database.entity.DepartmentsListEntity;
 import com.project.infosdepartment.model.utils.FetchInfoCallback;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class DepartmentRepository {
 
@@ -79,8 +78,13 @@ public class DepartmentRepository {
         }
     }
 
-    public LiveData<List<DepartmentsListEntity>> getDepartmentsList() {
-        return departmentsListDao.getDepartmentsList();
+    public List<DepartmentsListEntity> getDepartmentsList() {
+        AtomicReference<List<DepartmentsListEntity>> res = new AtomicReference<>();
+        DepartmentDatabase.getDatabaseWriteExecutor().execute(() -> {
+            res.set(departmentsListDao.getDepartmentsList());
+            Log.d("[DEBUG][DepartmentRepository]", "getDepartmentsList : Size = " + res.get().size());
+        });
+        return res.get();
     }
 
     public void insert(DepartmentsListEntity departmentsListEntity) {
@@ -88,27 +92,36 @@ public class DepartmentRepository {
     }
 
     public DepartmentsListEntity getDepartment(String departmentCode) {
-        return departmentsListDao.getDepartment(departmentCode);
+        AtomicReference<DepartmentsListEntity> res = new AtomicReference<>();
+        DepartmentDatabase.getDatabaseWriteExecutor().execute(() -> res.set(departmentsListDao.getDepartment(departmentCode)));
+        return res.get();
+
     }
 
     public Boolean getIfDataFetched(String departmentCode) {
-        return departmentsListDao.getIfDataFetched(departmentCode);
+        AtomicReference<Boolean> res = new AtomicReference<>();
+        DepartmentDatabase.getDatabaseWriteExecutor().execute(() -> res.set(departmentsListDao.getIfDataFetched(departmentCode)));
+        return res.get();
     }
 
     public void updateEntities(DepartmentsListEntity departmentsListEntity) {
-        departmentsListDao.updateEntities(departmentsListEntity);
+        DepartmentDatabase.getDatabaseWriteExecutor().execute(() -> departmentsListDao.updateEntities(departmentsListEntity));
     }
 
     public void setTrueBoolDepartment(String departmentCode) {
-        departmentsListDao.setTrueBoolDepartment(departmentCode);
+        DepartmentDatabase.getDatabaseWriteExecutor().execute(() -> departmentsListDao.setTrueBoolDepartment(departmentCode));
     }
 
     public void resetBoolDepartment() {
-        departmentsListDao.resetBoolDepartment();
+        DepartmentDatabase.getDatabaseWriteExecutor().execute(departmentsListDao::resetBoolDepartment);
     }
 
     public void deleteAll() {
-        departmentsDao.deleteAll();
+        DepartmentDatabase.getDatabaseWriteExecutor().execute(departmentsDao::deleteAll);
+    }
+
+    public void cleanDepartmentList() {
+        DepartmentDatabase.getDatabaseWriteExecutor().execute(departmentsListDao::deleteAll);
     }
 
     public void resetCache() {

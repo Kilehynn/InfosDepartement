@@ -1,5 +1,6 @@
 package com.project.infosdepartment.views;
 
+import android.util.Log;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -29,7 +30,9 @@ public class DepartmentListAdapter extends ListAdapter<DepartmentsListEntity, De
 
         @Override
         public boolean areItemsTheSame(@NonNull DepartmentsListEntity oldItem, @NonNull DepartmentsListEntity newItem) {
-            return oldItem == newItem;
+            boolean res = oldItem.getDepartmentCode().equals(newItem.getDepartmentCode());
+            Log.i("[DEBUG][DepartmentDiff]", oldItem.getDepartmentCode() + " == " + newItem.getDepartmentCode() + " is " + res);
+            return res;
         }
 
         @Override
