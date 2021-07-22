@@ -3,11 +3,9 @@ package com.project.infosdepartment.model.database;
 import android.content.Context;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
-import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -34,7 +32,10 @@ public abstract class DepartmentDatabase extends RoomDatabase {
     private static final ExecutorService databaseWriteExecutor =
             Executors.newFixedThreadPool(NUMBER_OF_THREADS);
     private static volatile DepartmentDatabase instance = null;
-    private static final RoomDatabase.Callback sRoomDatabaseCallback = new RoomDatabase.Callback() {
+
+
+    //TODO : Tried to do it with a callback, but couldn't make it work, to investigate
+ /*   private static final RoomDatabase.Callback sRoomDatabaseCallback = new RoomDatabase.Callback() {
         @Override
         public void onCreate(@NonNull SupportSQLiteDatabase db) {
             super.onCreate(db);
@@ -50,8 +51,10 @@ public abstract class DepartmentDatabase extends RoomDatabase {
                         String departmentCode = current.getString("code");
 
                         DepartmentsListDao departmentsListDao = instance.departmentsListDao();
-                        DepartmentsListEntity departmentEntity = new DepartmentsListEntity(departmentCode, departmentName);
-                        departmentsListDao.insert(departmentEntity);
+                        databaseWriteExecutor.execute(() -> {
+                            DepartmentsListEntity departmentEntity = new DepartmentsListEntity(departmentCode, departmentName);
+                            departmentsListDao.insert(departmentEntity);
+                        });
 
                     } catch (JSONException e) {
                         Log.e("[ERROR][DepartmentDatabase]", "onResponse: An error occurred when populating the database.");
@@ -64,7 +67,7 @@ public abstract class DepartmentDatabase extends RoomDatabase {
             });
             requestQueue.add(jsonArrayRequest);
         }
-    };
+    };*/
 
     public static DepartmentDatabase getDatabase(final Context context) {
         if (instance == null) {
@@ -73,12 +76,40 @@ public abstract class DepartmentDatabase extends RoomDatabase {
                     ctx = context;
                     instance = Room.databaseBuilder(context.getApplicationContext(),
                             DepartmentDatabase.class, "departement_database")
-                            .addCallback(sRoomDatabaseCallback)
+                            //  .addCallback(sRoomDatabaseCallback)
                             .build();
+                    instance.fillDB();
                 }
             }
         }
         return instance;
+    }
+
+    private void fillDB() {
+        Log.i("[INFO][DepartmentDatabase]", "FillDB: Populating database.");
+        RequestQueue requestQueue = Volley.newRequestQueue(ctx);
+        String url = DepartmentRepository.getUrlDepartmentEndpoint();
+        DepartmentsListDao departmentsListDao = instance.departmentsListDao();
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null, response -> {
+            for (int i = 0; i < response.length(); i++) {
+                try {
+                    JSONObject current = response.getJSONObject(i);
+                    String departmentName = current.getString("nom");
+                    String departmentCode = current.getString("code");
+                    Log.i("[INFO][DepartmentDatabase]", "onResponse: Create Department Entity.");
+                    databaseWriteExecutor.execute(() -> {
+                        DepartmentsListEntity departmentEntity = new DepartmentsListEntity(departmentCode, departmentName);
+                        departmentsListDao.insert(departmentEntity);
+                    });
+                } catch (JSONException e) {
+                    Log.e("[ERROR][DepartmentDatabase]", "onResponse: An error occurred when populating the database.");
+                    // TODO: Handle error
+                }
+            }
+        }, error -> {
+            // TODO: Handle error
+        });
+        requestQueue.add(jsonArrayRequest);
     }
 
     public abstract DepartmentsDao departmentsDao();
