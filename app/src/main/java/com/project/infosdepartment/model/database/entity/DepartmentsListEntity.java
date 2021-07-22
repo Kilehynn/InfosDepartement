@@ -31,7 +31,7 @@ public class DepartmentsListEntity {
         this.departmentCode = departmentCode;
         this.departmentName = departmentName;
         areDataFetched = false;
-        Log.i("[INFO][DepartmentsListEntity]", "Ctr : department number " + departmentCode + " , " + departmentName + " has been added to the database");
+        Log.i("[INFO][DepartmentsListEntity]", "Ctr : department number " + departmentCode + " , " + departmentName);
     }
 
     @NonNull
