@@ -13,7 +13,7 @@ import java.util.List;
 @Dao
 public interface DepartmentsListDao {
 
-    @Query("SELECT * FROM departmentsList")
+    @Query("SELECT * FROM departmentsList ORDER BY code")
     List<DepartmentsListEntity> getDepartmentsList();
 
     @Query("SELECT * FROM departmentsList WHERE code == :departmentCode")

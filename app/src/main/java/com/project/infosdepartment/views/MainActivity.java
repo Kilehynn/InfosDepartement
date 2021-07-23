@@ -8,7 +8,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.project.infosdepartment.R;
+import com.project.infosdepartment.model.database.entity.DepartmentsListEntity;
 import com.project.infosdepartment.viewmodel.DepartmentViewModel;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private DepartmentViewModel departmentViewModel;
@@ -21,11 +24,12 @@ public class MainActivity extends AppCompatActivity {
 
         departmentViewModel = new ViewModelProvider(this).get(DepartmentViewModel.class);
 
-        final DepartmentListAdapter adapter = new DepartmentListAdapter(new DepartmentListAdapter.DepartmentDiff());
+        List<DepartmentsListEntity> departmentsListEntities = departmentViewModel.getDepartmentsListEntity();
+        final DepartmentListAdapter adapter = new DepartmentListAdapter(new DepartmentListAdapter.DepartmentDiff(), departmentsListEntities);
 
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter.submitList(departmentViewModel.getDepartmentsListEntity());
-        departmentViewModel.cleanDatabase();
+        // adapter.submitList(departmentsListEntities);
+        //departmentViewModel.cleanDatabase();
     }
 }

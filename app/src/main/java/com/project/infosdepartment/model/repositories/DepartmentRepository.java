@@ -16,7 +16,8 @@ import com.project.infosdepartment.model.database.entity.DepartmentsListEntity;
 import com.project.infosdepartment.model.utils.FetchInfoCallback;
 
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 public class DepartmentRepository {
 
@@ -79,12 +80,16 @@ public class DepartmentRepository {
     }
 
     public List<DepartmentsListEntity> getDepartmentsList() {
-        AtomicReference<List<DepartmentsListEntity>> res = new AtomicReference<>();
-        DepartmentDatabase.getDatabaseWriteExecutor().execute(() -> {
-            res.set(departmentsListDao.getDepartmentsList());
-            Log.d("[DEBUG][DepartmentRepository]", "getDepartmentsList : Size = " + res.get().size());
-        });
-        return res.get();
+        //   AtomicReference<List<DepartmentsListEntity>> res = new AtomicReference<>();
+        List<DepartmentsListEntity> res = null;
+        Future<List<DepartmentsListEntity>> future = DepartmentDatabase.getDatabaseWriteExecutor().submit(departmentsListDao::getDepartmentsList);
+        try {
+            res = future.get();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        return res;
+
     }
 
     public void insert(DepartmentsListEntity departmentsListEntity) {
@@ -92,16 +97,30 @@ public class DepartmentRepository {
     }
 
     public DepartmentsListEntity getDepartment(String departmentCode) {
-        AtomicReference<DepartmentsListEntity> res = new AtomicReference<>();
-        DepartmentDatabase.getDatabaseWriteExecutor().execute(() -> res.set(departmentsListDao.getDepartment(departmentCode)));
-        return res.get();
-
+        DepartmentsListEntity res = null;
+        Future<DepartmentsListEntity> future = DepartmentDatabase.getDatabaseWriteExecutor().submit(() -> {
+            return departmentsListDao.getDepartment(departmentCode);
+        });
+        try {
+            res = future.get();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        return res;
     }
 
     public Boolean getIfDataFetched(String departmentCode) {
-        AtomicReference<Boolean> res = new AtomicReference<>();
-        DepartmentDatabase.getDatabaseWriteExecutor().execute(() -> res.set(departmentsListDao.getIfDataFetched(departmentCode)));
-        return res.get();
+        boolean res = false;
+        Future<Boolean> future = DepartmentDatabase.getDatabaseWriteExecutor().submit(() -> {
+            return departmentsListDao.getIfDataFetched(departmentCode);
+        });
+        try {
+            res = future.get();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        return res;
+
     }
 
     public void updateEntities(DepartmentsListEntity departmentsListEntity) {

@@ -33,6 +33,7 @@ public abstract class DepartmentDatabase extends RoomDatabase {
     private static Context ctx;
     private static final ExecutorService databaseWriteExecutor =
             Executors.newFixedThreadPool(NUMBER_OF_THREADS);
+
     private static volatile DepartmentDatabase instance = null;
 
 

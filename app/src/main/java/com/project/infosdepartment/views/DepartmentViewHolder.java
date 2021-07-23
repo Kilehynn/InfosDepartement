@@ -12,7 +12,7 @@ import com.project.infosdepartment.R;
 public class DepartmentViewHolder extends RecyclerView.ViewHolder {
     private final TextView departmentItemView;
 
-    private DepartmentViewHolder(View itemView) {
+    DepartmentViewHolder(View itemView) {
         super(itemView);
         departmentItemView = itemView.findViewById(R.id.textView);
     }
