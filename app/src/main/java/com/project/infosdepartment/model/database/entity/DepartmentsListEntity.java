@@ -12,6 +12,7 @@ public class DepartmentsListEntity {
 
     //The code of each department
     @NonNull
+    @PrimaryKey
     @ColumnInfo(name = "code")
     private final String departmentCode;
     //The name of each Department
@@ -22,10 +23,7 @@ public class DepartmentsListEntity {
     @NonNull
     @ColumnInfo(name = "areDataFetched")
     private Integer areDataFetched = 0;
-    @NonNull
-    @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "id")
-    private Integer id;
+
 
     public DepartmentsListEntity(@NonNull String departmentCode, @NonNull String departmentName) {
         this.departmentCode = departmentCode;
@@ -52,14 +50,6 @@ public class DepartmentsListEntity {
         this.areDataFetched = areDataFetched;
     }
 
-    @NonNull
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(@NonNull Integer id) {
-        this.id = id;
-    }
 
     @Override
     public String toString() {

@@ -9,13 +9,10 @@ import androidx.room.PrimaryKey;
 @Entity(tableName = "departments")
 public class DepartmentEntity {
 
-    //PrimaryKey of our DB
-    @PrimaryKey(autoGenerate = true)
-    @NonNull
-    private Integer id;
 
     //The code of each department
     @NonNull
+    @PrimaryKey
     @ColumnInfo(name = "code")
     private final String departmentCode;
 
@@ -37,9 +34,6 @@ public class DepartmentEntity {
         this.nbTowns = nbTowns;
     }
 
-    public int getId() {
-        return id;
-    }
 
     @NonNull
     public String getDepartmentCode() {
@@ -57,10 +51,6 @@ public class DepartmentEntity {
 
     public Integer getNbTowns() {
         return nbTowns;
-    }
-
-    public void setId(@NonNull Integer id) {
-        this.id = id;
     }
 
 }

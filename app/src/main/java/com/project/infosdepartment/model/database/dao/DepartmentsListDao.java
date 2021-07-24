@@ -22,7 +22,7 @@ public interface DepartmentsListDao {
     @Query("SELECT areDataFetched FROM departmentsList WHERE code == :departmentCode")
     Integer getIfDataFetched(String departmentCode);
 
-    @Query("SELECT count(id) as nbDepartement  from departmentsList")
+    @Query("SELECT count(code) as nbDepartement  from departmentsList")
     Integer getAnyDepartment();
 
     @Query("DELETE FROM departmentsList")
