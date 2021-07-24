@@ -58,25 +58,35 @@ public class DepartmentRepository {
     }
 
     public void fetchInfo(String code, FetchInfoCallback infoCallback) {
-        Log.i("[INFO][DepartmentRepository]", "fetchInfo : Department number " + code);
+        Log.d("[DEBUG][DepartmentRepository]", "fetchInfo : Department number " + code);
         RequestQueue requestQueue = Volley.newRequestQueue(ctx);
         String url = getUrlDepartmentEndpoint() + code + townEndpoint + fields + "departement,population" + format;
-        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null, response -> infoCallback.onSuccess(response, departmentsDao, code), error ->
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null, response -> infoCallback.onSuccess(response, this, code), error ->
         {
             // TODO: Handle error
         });
         requestQueue.add(jsonArrayRequest);
     }
 
+
     public DepartmentEntity getDepartmentInfo(String code) {
-        Log.i("[INFO][DepartmentRepository]", "getDepartmentInfo : Department number " + code);
-        if (departmentsListDao.getIfDataFetched(code)) {
-            Log.i("[INFO][DepartmentRepository]", "getDepartmentInfo : Data already in cache");
-            return departmentsDao.getDepartmentFromCode(code);
+        DepartmentEntity res = null;
+        Future<DepartmentEntity> future;
+
+        Log.d("[DEBUG][DepartmentRepository]", "getDepartmentInfo : Department number " + code);
+        if (getIfDataFetched(code) == 1) {
+            Log.d("[DEBUG][DepartmentRepository]", "getDepartmentInfo : Data already in cache");
+
         } else {
             fetchInfo(code, new FetchInfoCallback());
-            return departmentsDao.getDepartmentFromCode(code);
         }
+        future = DepartmentDatabase.getDatabaseWriteExecutor().submit(() -> departmentsDao.getDepartmentFromCode(code));
+        try {
+            res = future.get();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        return res;
     }
 
     public List<DepartmentsListEntity> getDepartmentsList() {
@@ -109,11 +119,18 @@ public class DepartmentRepository {
         return res;
     }
 
-    public Boolean getIfDataFetched(String departmentCode) {
-        boolean res = false;
-        Future<Boolean> future = DepartmentDatabase.getDatabaseWriteExecutor().submit(() -> {
-            return departmentsListDao.getIfDataFetched(departmentCode);
-        });
+    public void insert(DepartmentEntity entity) {
+        Future<Long> future = DepartmentDatabase.getDatabaseWriteExecutor().submit(() -> departmentsDao.insert(entity));
+        try {
+            future.get();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public int getIfDataFetched(String departmentCode) {
+        int res = 0;
+        Future<Integer> future = DepartmentDatabase.getDatabaseWriteExecutor().submit(() -> departmentsListDao.getIfDataFetched(departmentCode));
         try {
             res = future.get();
         } catch (ExecutionException | InterruptedException e) {

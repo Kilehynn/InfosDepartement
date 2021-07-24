@@ -21,17 +21,16 @@ public class DepartmentsListEntity {
     //Boolean saying if the data of a departement has already been fetched
     @NonNull
     @ColumnInfo(name = "areDataFetched")
-    private Boolean areDataFetched;
+    private Integer areDataFetched = 0;
     @NonNull
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
-    private Integer id;
+    private Integer id = 0;
 
     public DepartmentsListEntity(@NonNull String departmentCode, @NonNull String departmentName) {
         this.departmentCode = departmentCode;
         this.departmentName = departmentName;
-        areDataFetched = false;
-        Log.i("[INFO][DepartmentsListEntity]", "Ctr : department number " + departmentCode + " , " + departmentName);
+        Log.i("[DEBUG][DepartmentsListEntity]", "Ctr : department number " + departmentCode + " , " + departmentName);
     }
 
     @NonNull
@@ -45,11 +44,11 @@ public class DepartmentsListEntity {
     }
 
     @NonNull
-    public Boolean getAreDataFetched() {
+    public int getAreDataFetched() {
         return areDataFetched;
     }
 
-    public void setAreDataFetched(@NonNull Boolean areDataFetched) {
+    public void setAreDataFetched(@NonNull int areDataFetched) {
         this.areDataFetched = areDataFetched;
     }
 
@@ -60,5 +59,10 @@ public class DepartmentsListEntity {
 
     public void setId(@NonNull Integer id) {
         this.id = id;
+    }
+
+    @Override
+    public String toString() {
+        return "(" + departmentCode + ") - " + departmentName;
     }
 }

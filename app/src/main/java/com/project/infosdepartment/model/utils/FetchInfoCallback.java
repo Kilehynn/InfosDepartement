@@ -2,8 +2,8 @@ package com.project.infosdepartment.model.utils;
 
 import android.util.Log;
 
-import com.project.infosdepartment.model.database.dao.DepartmentsDao;
 import com.project.infosdepartment.model.database.entity.DepartmentEntity;
+import com.project.infosdepartment.model.repositories.DepartmentRepository;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -11,7 +11,7 @@ import org.json.JSONObject;
 
 public class FetchInfoCallback {
 
-    public void onSuccess(JSONArray result, DepartmentsDao departmentsDao, String departmentCode) {
+    public void onSuccess(JSONArray result, DepartmentRepository departmentRepository, String departmentCode) {
         String departmentName = "";
         int nbTowns = result.length();
         int inhabitants = 0;
@@ -29,8 +29,14 @@ public class FetchInfoCallback {
             }
 
         }
+        Log.d("[DEBUG][fetchInfoCallback]", "onSuccess : Insert new DepartementEntity in Department Database\n" +
+                "Department Code : " + departmentCode + "\n" +
+                "Department Name : " + departmentName + "\n" +
+                "Number of Towns : " + nbTowns + "\n" +
+                "Number of inhabitants : " + inhabitants + "\n");
         DepartmentEntity entity = new DepartmentEntity(departmentCode, departmentName, inhabitants, nbTowns);
-        departmentsDao.insert(entity);
+        departmentRepository.insert(entity);
+        departmentRepository.setTrueBoolDepartment(departmentCode);
 
     }
 

@@ -22,8 +22,10 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 //Create our database with 2 tables, one for each Entity
 @Database(entities = {DepartmentEntity.class, DepartmentsListEntity.class}, version = 1, exportSchema = false)
@@ -94,39 +96,44 @@ public abstract class DepartmentDatabase extends RoomDatabase {
         RequestQueue requestQueue = Volley.newRequestQueue(ctx);
         String url = DepartmentRepository.getUrlDepartmentEndpoint();
         DepartmentsListDao departmentsListDao = instance.departmentsListDao();
-        databaseWriteExecutor.execute(() -> {
-            List<DepartmentsListEntity> anyDepartment = new ArrayList<>();
-            anyDepartment = departmentsListDao.getAnyDepartment();
-            if (anyDepartment.isEmpty()) {
-                Log.i("[INFO][DepartmentDatabase]", "FillDB: Populating database.");
-                JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null, response -> {
-                    for (int i = 0; i < response.length(); i++) {
-                        try {
-                            JSONObject current = response.getJSONObject(i);
-                            String departmentName = current.getString("nom");
-                            String departmentCode = current.getString("code");
-                            Log.i("[INFO][DepartmentDatabase]", "onResponse: Create Department Entity.");
-                            DepartmentsListEntity departmentEntity = new DepartmentsListEntity(departmentCode, departmentName);
-                            databaseWriteExecutor.execute(() -> {
-                                departmentsListDao.insert(departmentEntity);
-                            });
-
-                        } catch (JSONException e) {
-                            Log.e("[ERROR][DepartmentDatabase]", "onResponse: An error occurred when populating the database.");
-                            // TODO: Handle error
-                        }
+        List<DepartmentsListEntity> anyDepartment = new ArrayList<>();
+        Future<List<DepartmentsListEntity>> future = databaseWriteExecutor.submit(departmentsListDao::getDepartmentsList);
+        try {
+            anyDepartment = future.get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+        if (anyDepartment.isEmpty()) {
+            Log.i("[DEBUG][DepartmentDatabase]", "FillDB: Populating database.");
+            JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null, response -> {
+                for (int i = 0; i < response.length(); i++) {
+                    try {
+                        JSONObject current = response.getJSONObject(i);
+                        String departmentName = current.getString("nom");
+                        String departmentCode = current.getString("code");
+                        Log.i("[DEBUG][DepartmentDatabase]", "onResponse: Create Department Entity.");
+                        DepartmentsListEntity departmentEntity = new DepartmentsListEntity(departmentCode, departmentName);
+                        Future<?> voidFuture = databaseWriteExecutor.submit(() -> {
+                            departmentsListDao.insert(departmentEntity);
+                        });
+                        voidFuture.get();
+                    } catch (JSONException e) {
+                        Log.e("[ERROR][DepartmentDatabase]", "onResponse: An error occurred when populating the database.");
+                        // TODO: Handle error
+                    } catch (InterruptedException | ExecutionException e) {
+                        e.printStackTrace();
                     }
-                }, error -> {
-                    // TODO: Handle error
-                });
-                requestQueue.add(jsonArrayRequest);
-            } else {
-
-                Log.i("[INFO][DepartmentDatabase]", "FillDB: Database is full.");
-            }
-
-        });
-
+                }
+            }, error -> {
+                // TODO: Handle error
+            });
+            requestQueue.add(jsonArrayRequest);
+        } else {
+            Log.i("[DEBUG][DepartmentDatabase]", "FillDB: Database is full.");
+        }/*
+        databaseWriteExecutor.execute(() -> {
+      List<DepartmentsListEntity> anyDepartment = departmentsListDao.getAnyDepartment();
+        });*/
 
     }
 

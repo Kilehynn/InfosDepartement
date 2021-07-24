@@ -23,6 +23,6 @@ public interface DepartmentsDao {
     void deleteAll();
 
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    void insert(DepartmentEntity... departementEntities);
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    long insert(DepartmentEntity departementEntity);
 }

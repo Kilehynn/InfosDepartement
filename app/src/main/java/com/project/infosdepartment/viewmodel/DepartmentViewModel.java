@@ -35,6 +35,10 @@ public class DepartmentViewModel extends AndroidViewModel {
         return departmentRepository.getDepartmentInfo(departmentCode);
     }
 
+    public int getIfDataFetched(String departmentCode) {
+        return departmentRepository.getIfDataFetched(departmentCode);
+    }
+
     public void resetCache() {
         departmentRepository.resetCache();
     }

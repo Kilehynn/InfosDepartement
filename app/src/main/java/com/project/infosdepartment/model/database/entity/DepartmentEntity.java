@@ -12,7 +12,7 @@ public class DepartmentEntity {
     //PrimaryKey of our DB
     @PrimaryKey(autoGenerate = true)
     @NonNull
-    private Integer id;
+    private Integer id = 0;
 
     //The code of each department
     @NonNull
