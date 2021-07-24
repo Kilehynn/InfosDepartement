@@ -1,5 +1,6 @@
 package com.project.infosdepartment.views;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -66,6 +67,14 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this, "Get data from cache", Toast.LENGTH_SHORT).show();
             }
             DepartmentEntity data = departmentViewModel.getDepartmentInfo(departmentsListEntity.getDepartmentCode());
+
+            Intent intent = new Intent(this, InfoActivity.class);
+            intent.putExtra("departmentName", data.getDepartmentName());
+            intent.putExtra("departmentCode", data.getDepartmentCode());
+            intent.putExtra("departmentInhabitants", data.getInhabitants());
+            intent.putExtra("departmentTowns", data.getNbTowns());
+            startActivity(intent);
+
             //   departmentsListEntity.setAreDataFetched(1);
             // This code will start the new activity when the settings button is clicked on the bar at the top.
             //  Intent intent = new Intent(this, GroupCourseActivity.class);
