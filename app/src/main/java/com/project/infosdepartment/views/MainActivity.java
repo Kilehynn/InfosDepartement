@@ -17,7 +17,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.project.infosdepartment.R;
-import com.project.infosdepartment.model.database.entity.DepartmentEntity;
 import com.project.infosdepartment.model.database.entity.DepartmentsListEntity;
 import com.project.infosdepartment.viewmodel.DepartmentViewModel;
 
@@ -66,13 +65,10 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 Toast.makeText(this, "Get data from cache", Toast.LENGTH_SHORT).show();
             }
-            DepartmentEntity data = departmentViewModel.getDepartmentInfo(departmentsListEntity.getDepartmentCode());
+            // DepartmentEntity data = departmentViewModel.getDepartmentInfo(departmentsListEntity.getDepartmentCode());
 
             Intent intent = new Intent(this, InfoActivity.class);
-            intent.putExtra("departmentName", data.getDepartmentName());
-            intent.putExtra("departmentCode", data.getDepartmentCode());
-            intent.putExtra("departmentInhabitants", data.getInhabitants());
-            intent.putExtra("departmentTowns", data.getNbTowns());
+            intent.putExtra("departmentName", departmentsListEntity.getDepartmentCode());
             startActivity(intent);
 
             //   departmentsListEntity.setAreDataFetched(1);
