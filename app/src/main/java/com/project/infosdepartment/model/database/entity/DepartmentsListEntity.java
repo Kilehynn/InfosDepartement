@@ -25,7 +25,7 @@ public class DepartmentsListEntity {
     @NonNull
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
-    private Integer id = 0;
+    private Integer id;
 
     public DepartmentsListEntity(@NonNull String departmentCode, @NonNull String departmentName) {
         this.departmentCode = departmentCode;
@@ -44,11 +44,11 @@ public class DepartmentsListEntity {
     }
 
     @NonNull
-    public int getAreDataFetched() {
+    public Integer getAreDataFetched() {
         return areDataFetched;
     }
 
-    public void setAreDataFetched(@NonNull int areDataFetched) {
+    public void setAreDataFetched(@NonNull Integer areDataFetched) {
         this.areDataFetched = areDataFetched;
     }
 

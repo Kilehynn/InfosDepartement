@@ -21,7 +21,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -96,33 +95,36 @@ public abstract class DepartmentDatabase extends RoomDatabase {
         RequestQueue requestQueue = Volley.newRequestQueue(ctx);
         String url = DepartmentRepository.getUrlDepartmentEndpoint();
         DepartmentsListDao departmentsListDao = instance.departmentsListDao();
-        List<DepartmentsListEntity> anyDepartment = new ArrayList<>();
-        Future<List<DepartmentsListEntity>> future = databaseWriteExecutor.submit(departmentsListDao::getDepartmentsList);
+        Integer anyDepartment = 0;
+        Future<Integer> future = databaseWriteExecutor.submit(departmentsListDao::getAnyDepartment);
         try {
             anyDepartment = future.get();
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
-        if (anyDepartment.isEmpty()) {
+        if (anyDepartment < 101) {
             Log.i("[DEBUG][DepartmentDatabase]", "FillDB: Populating database.");
             JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null, response -> {
+                ArrayList<DepartmentsListEntity> departmentsListEntities = new ArrayList<>();
                 for (int i = 0; i < response.length(); i++) {
                     try {
                         JSONObject current = response.getJSONObject(i);
                         String departmentName = current.getString("nom");
                         String departmentCode = current.getString("code");
                         Log.i("[DEBUG][DepartmentDatabase]", "onResponse: Create Department Entity.");
+                        Log.i("[DEBUG][DepartmentDatabase]", "onResponse: Department " + (i + 1) + " out of " + response.length() + ".");
                         DepartmentsListEntity departmentEntity = new DepartmentsListEntity(departmentCode, departmentName);
-                        Future<?> voidFuture = databaseWriteExecutor.submit(() -> {
-                            departmentsListDao.insert(departmentEntity);
-                        });
-                        voidFuture.get();
+                        departmentsListEntities.add(departmentEntity);
                     } catch (JSONException e) {
                         Log.e("[ERROR][DepartmentDatabase]", "onResponse: An error occurred when populating the database.");
-                        // TODO: Handle error
-                    } catch (InterruptedException | ExecutionException e) {
-                        e.printStackTrace();
                     }
+
+                }
+                Future<?> insertFuture = databaseWriteExecutor.submit(() -> departmentsListDao.insert(departmentsListEntities.toArray(new DepartmentsListEntity[response.length()])));
+                try {
+                    insertFuture.get();
+                } catch (ExecutionException | InterruptedException e) {
+                    e.printStackTrace();
                 }
             }, error -> {
                 // TODO: Handle error

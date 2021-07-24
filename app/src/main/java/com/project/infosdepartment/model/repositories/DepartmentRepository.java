@@ -120,7 +120,7 @@ public class DepartmentRepository {
     }
 
     public void insert(DepartmentEntity entity) {
-        Future<Long> future = DepartmentDatabase.getDatabaseWriteExecutor().submit(() -> departmentsDao.insert(entity));
+        Future<?> future = DepartmentDatabase.getDatabaseWriteExecutor().submit(() -> departmentsDao.insert(entity));
         try {
             future.get();
         } catch (ExecutionException | InterruptedException e) {

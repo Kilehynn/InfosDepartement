@@ -24,5 +24,5 @@ public interface DepartmentsDao {
 
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    long insert(DepartmentEntity departementEntity);
+    long[] insert(DepartmentEntity... departementEntity);
 }

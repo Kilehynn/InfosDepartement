@@ -22,8 +22,8 @@ public interface DepartmentsListDao {
     @Query("SELECT areDataFetched FROM departmentsList WHERE code == :departmentCode")
     Integer getIfDataFetched(String departmentCode);
 
-    @Query("SELECT * from departmentsList LIMIT 1")
-    List<DepartmentsListEntity> getAnyDepartment();
+    @Query("SELECT count(id) as nbDepartement  from departmentsList")
+    Integer getAnyDepartment();
 
     @Query("DELETE FROM departmentsList")
     void deleteAll();
@@ -32,7 +32,7 @@ public interface DepartmentsListDao {
     void updateEntities(DepartmentsListEntity... departmentsListEntities);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    long insert(DepartmentsListEntity departmentsListEntity);
+    void insert(DepartmentsListEntity... departmentsListEntity);
 
     @Query("UPDATE departmentsList SET areDataFetched = 1 WHERE code == :departmentCode")
     void setTrueBoolDepartment(String departmentCode);

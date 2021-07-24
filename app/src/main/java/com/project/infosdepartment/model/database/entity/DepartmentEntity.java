@@ -12,7 +12,7 @@ public class DepartmentEntity {
     //PrimaryKey of our DB
     @PrimaryKey(autoGenerate = true)
     @NonNull
-    private Integer id = 0;
+    private Integer id;
 
     //The code of each department
     @NonNull
@@ -51,11 +51,11 @@ public class DepartmentEntity {
         return departmentName;
     }
 
-    public int getInhabitants() {
+    public Integer getInhabitants() {
         return inhabitants;
     }
 
-    public int getNbTowns() {
+    public Integer getNbTowns() {
         return nbTowns;
     }
 
