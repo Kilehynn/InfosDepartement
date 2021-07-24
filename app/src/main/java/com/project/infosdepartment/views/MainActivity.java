@@ -2,6 +2,8 @@ package com.project.infosdepartment.views;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -10,6 +12,7 @@ import android.widget.SearchView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.project.infosdepartment.R;
@@ -28,7 +31,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
         ListView listView = findViewById(R.id.listView);
+
+        setSupportActionBar(toolbar);
         departmentViewModel = new ViewModelProvider(this).get(DepartmentViewModel.class);
 
         List<DepartmentsListEntity> departmentsListEntities = departmentViewModel.getDepartmentsListEntity();
@@ -73,12 +80,30 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
 
+
             @Override
             public boolean onQueryTextChange(String newText) {
                 departmentsListEntityArrayAdapter.getFilter().filter(newText);
                 return false;
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menuToInflate) {
+        getMenuInflater().inflate(R.menu.action_home, menuToInflate);
+        return true;
+    }
+
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.refresh:
+                departmentViewModel.resetCache();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
 

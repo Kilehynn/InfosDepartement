@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">InfosDepartement</string>
     <string name="appName">InfosDepartement</string>
+    <string name="refresh_cache">Refresh Cache</string>
 </resources>

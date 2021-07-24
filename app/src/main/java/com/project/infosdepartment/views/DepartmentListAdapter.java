@@ -62,8 +62,7 @@ public class DepartmentListAdapter extends RecyclerView.Adapter<DepartmentViewHo
             if (entity.getAreDataFetched() == 1) {
                 data = dateFetched;
             }
-            Log.d("[DEBUG][MainActivity]", "printData : entity number " + entity.getId()
-                    + " is the department number " + entity.getDepartmentCode() + " the " + entity.getDepartmentName() + data);
+            Log.d("[DEBUG][MainActivity]", "printData : department number " + entity.getDepartmentCode() + " the " + entity.getDepartmentName() + data);
         }
     }
 /*
