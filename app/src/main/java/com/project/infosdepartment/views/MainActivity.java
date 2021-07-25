@@ -2,14 +2,16 @@ package com.project.infosdepartment.views;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SearchView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -39,16 +41,25 @@ public class MainActivity extends AppCompatActivity {
         departmentViewModel = new ViewModelProvider(this).get(DepartmentViewModel.class);
 
         List<DepartmentsListEntity> departmentsListEntities = departmentViewModel.getDepartmentsListEntity();
-        //final DepartmentListAdapter adapter = new DepartmentListAdapter(departmentsListEntities);
-        Log.d("[DEBUG][MainActivity]", "OnCreate : setAdapter");
-
-        departmentsListEntityArrayAdapter = new ArrayAdapter<DepartmentsListEntity>(this, android.R.layout.simple_list_item_1, departmentsListEntities) {
-        };
-        listView.setAdapter(departmentsListEntityArrayAdapter);
-        //  listView.setLayoutManager(new LinearLayoutManager(this));
-        // adapter.submitList(departmentsListEntities);
-        //departmentViewModel.cleanDatabase();
-        setupGroupList();
+        if (departmentsListEntities.size() == 0) {
+            Toast.makeText(this, "Veuillez relancer l'application si cela est votre première utilisation", Toast.LENGTH_LONG).show();
+            LinearLayout layout = findViewById(R.id.linearLayout);
+            TextView textView = new TextView(this);
+            textView.setText("Veuillez relancer l'application si cela est votre première utilisation.");
+            textView.setPadding(16, 64, 16, 32);
+            textView.setTextSize(20);
+            textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+            layout.addView(textView);
+            layout.removeView(listView);
+        } else {
+            departmentsListEntityArrayAdapter = new ArrayAdapter<DepartmentsListEntity>(this, android.R.layout.simple_list_item_1, departmentsListEntities) {
+            };
+            listView.setAdapter(departmentsListEntityArrayAdapter);
+            //  listView.setLayoutManager(new LinearLayoutManager(this));
+            // adapter.submitList(departmentsListEntities);
+            //departmentViewModel.cleanDatabase();
+            setupGroupList();
+        }
     }
 
     private void setupGroupList() {
@@ -62,12 +73,6 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(this, InfoActivity.class);
             intent.putExtra("departmentCode", departmentsListEntity.getDepartmentCode());
             startActivity(intent);
-
-            //   departmentsListEntity.setAreDataFetched(1);
-            // This code will start the new activity when the settings button is clicked on the bar at the top.
-            //  Intent intent = new Intent(this, GroupCourseActivity.class);
-            //intent.putExtra("group", groupEntity);
-            //startActivity(intent);
         });
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
