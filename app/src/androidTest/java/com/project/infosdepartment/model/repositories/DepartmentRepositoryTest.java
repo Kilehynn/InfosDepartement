@@ -99,4 +99,22 @@ public class DepartmentRepositoryTest {
         }
     }
 
+    @Test
+    void testResetCache() {
+        Integer zero = 0;
+        for (int i = 8; i < 15; i++) {
+            String code = Integer.toString(i);
+            departmentRepository.getDepartmentInfo(code);
+        }
+        departmentRepository.resetCache();
+        for (int i = 8; i < 15; i++) {
+            String code = Integer.toString(i);
+            try {
+                departmentRepository.getDepartmentInfoFromCache(code);
+                DepartmentsListEntity departmentsListEntity = departmentRepository.getDepartment(code);
+                Assert.assertEquals(zero, departmentsListEntity.getAreDataFetched());
+            } catch (RuntimeException ignored) {
+            }
+        }
+    }
 }

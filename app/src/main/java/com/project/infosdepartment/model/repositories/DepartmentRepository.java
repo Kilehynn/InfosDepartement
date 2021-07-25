@@ -122,6 +122,17 @@ public class DepartmentRepository {
         return res;
     }
 
+    public DepartmentEntity getDepartmentInfoFromCache(String code) {
+        DepartmentEntity res = null;
+        Future<DepartmentEntity> future = DepartmentDatabase.getDatabaseWriteExecutor().submit(() -> departmentsDao.getDepartmentFromCode(code));
+        try {
+            res = future.get();
+        } catch (ExecutionException | InterruptedException e) {
+            throw new RuntimeException("Error while getting the Department Entity from its code");
+        }
+        return res;
+    }
+
     public List<DepartmentsListEntity> getDepartmentsList() {
         //   AtomicReference<List<DepartmentsListEntity>> res = new AtomicReference<>();
         List<DepartmentsListEntity> res = null;
