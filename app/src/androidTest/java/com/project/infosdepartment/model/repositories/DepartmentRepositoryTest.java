@@ -144,5 +144,16 @@ public class DepartmentRepositoryTest {
         Assert.assertEquals("JeN'ExistePas", departmentEntity.getDepartmentName());
         Assert.assertEquals(two, departmentEntity.getNbTowns());
         Assert.assertEquals(one, departmentEntity.getInhabitants());
+        departmentRepository.resetCache();
+    }
+
+    @Test
+    public void testSetTrueDataFetched() throws InterruptedException {
+        String code = "78";
+        Assert.assertEquals(0, departmentRepository.getIfDataFetched(code));
+        departmentRepository.setTrueBoolDepartment(code);
+        Thread.sleep(1000);
+        Assert.assertEquals(1, departmentRepository.getIfDataFetched(code));
+
     }
 }
