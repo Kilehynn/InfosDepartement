@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">InfosDepartement</string>
+    <string name="appName">InfosDepartement</string>
+    <string name="refresh_cache">Refresh Cache</string>
+    <string name="imageDescription">Position du département sur une carte de France</string>
+    <string name="interactive_card">Carte Interactive</string>
+    <string name="firstUse">Veuillez relancer l\'application si cela est votre première utilisation.</string>
 </resources>

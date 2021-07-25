@@ -21,38 +21,24 @@
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
             android:elevation="4dp"
-            android:label="@string/appName"
+            android:label="@string/interactive_card"
             android:minHeight="?attr/actionBarSize"
-            android:theme="?attr/actionBarTheme" />
+            android:theme="?attr/actionBarTheme"
+            app:title="@string/interactive_card" />
 
-        <SearchView
-            android:id="@+id/searchView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:iconifiedByDefault="false"
-            app:iconifiedByDefault="false" />
-        <!--
-            <androidx.recyclerview.widget.RecyclerView
-                  android:id="@+id/recyclerview"
-                  android:layout_width="0dp"
-                  android:layout_height="0dp"
-                  android:layout_marginStart="8dp"
-                  android:layout_marginTop="8dp"
-                  android:layout_marginEnd="8dp"
-                  android:layout_marginBottom="8dp"
-                  tools:listitem="@layout/recyclerview_item" /> -->
-        <ListView
-            android:id="@+id/listView"
+
+        <com.richpath.RichPathView
+            android:id="@+id/departmentPosition"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="15dp"
             android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp" />
-
+            android:layout_marginBottom="8dp"
+            android:contentDescription="@string/imageDescription"
+            app:layout_constraintStart_toStartOf="parent"
+            app:vector="@drawable/ic_notifications"
+            tools:srcCompat="@tools:sample/avatars" />
 
     </LinearLayout>
 

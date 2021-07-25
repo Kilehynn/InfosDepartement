@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".views.MainActivity">
+    tools:context=".views.InfoActivity">
+
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -21,38 +25,58 @@
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
             android:elevation="4dp"
-            android:label="@string/appName"
             android:minHeight="?attr/actionBarSize"
             android:theme="?attr/actionBarTheme" />
 
-        <SearchView
-            android:id="@+id/searchView"
+        <com.richpath.RichPathView
+            android:id="@+id/departmentPosition"
+            android:layout_width="389dp"
+            android:layout_height="276dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:contentDescription="@string/imageDescription"
+            android:visibility="invisible"
+            app:layout_constraintStart_toStartOf="parent"
+            app:vector="@drawable/ic_notifications"
+            tools:srcCompat="@tools:sample/avatars" />
+
+        <TextView
+            android:id="@+id/departmentName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
-            android:iconifiedByDefault="false"
-            app:iconifiedByDefault="false" />
-        <!--
-            <androidx.recyclerview.widget.RecyclerView
-                  android:id="@+id/recyclerview"
-                  android:layout_width="0dp"
-                  android:layout_height="0dp"
-                  android:layout_marginStart="8dp"
-                  android:layout_marginTop="8dp"
-                  android:layout_marginEnd="8dp"
-                  android:layout_marginBottom="8dp"
-                  tools:listitem="@layout/recyclerview_item" /> -->
-        <ListView
-            android:id="@+id/listView"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:id="@+id/departmentCode"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp" />
 
+        <TextView
+            android:id="@+id/departmentInhabitants"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:id="@+id/departmentTowns"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp" />
 
     </LinearLayout>
 
