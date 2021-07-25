@@ -27,7 +27,7 @@ public class DepartmentRepository {
     private static final String format = "&format=json";
     private static final String fields = "?fields=";
     private static final String departmentEndpoint = "/departements/";
-    private final String townEndpoint = "/communes";
+    private static final String townEndpoint = "/communes";
     private final DepartmentsDao departmentsDao;
     private final DepartmentsListDao departmentsListDao;
     private final Context ctx;
@@ -37,6 +37,10 @@ public class DepartmentRepository {
         DepartmentDatabase db = DepartmentDatabase.getDatabase(ctx);
         this.departmentsDao = db.departmentsDao();
         this.departmentsListDao = db.departmentsListDao();
+    }
+
+    public static String getTownEndpoint() {
+        return townEndpoint;
     }
 
     public static String getUrlPrefix() {
@@ -128,7 +132,6 @@ public class DepartmentRepository {
             throw new RuntimeException("Error while getting all the DepartmentListEntity from the DB");
         }
         return res;
-
     }
 
     public void insert(DepartmentsListEntity departmentsListEntity) {

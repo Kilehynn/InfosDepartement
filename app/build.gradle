@@ -8,7 +8,9 @@ android {
     }
     compileSdkVersion 30
     buildToolsVersion "30.0.2"
-
+    testOptions {
+        unitTests.includeAndroidResources = true
+    }
     defaultConfig {
         applicationId "com.project.infosdepartement"
         minSdkVersion 26
@@ -45,6 +47,7 @@ dependencies {
 
     // Room components
     implementation "androidx.room:room-runtime:$rootProject.roomVersion"
+    testImplementation 'org.junit.jupiter:junit-jupiter'
     annotationProcessor "androidx.room:room-compiler:$rootProject.roomVersion"
     androidTestImplementation "androidx.room:room-testing:$rootProject.roomVersion"
 
@@ -58,12 +61,14 @@ dependencies {
     implementation "com.google.android.material:material:$rootProject.materialVersion"
     implementation 'com.github.tarek360.RichPath:animator:0.1.1'
     // Testing
-    testImplementation "junit:junit:$rootProject.junitVersion"
+
+    testImplementation "junit:junit:4.13.2"
+    testImplementation 'androidx.test:core:1.4.0'
     androidTestImplementation 'androidx.test:runner:1.4.0'
     androidTestImplementation 'androidx.test:rules:1.4.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
     androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.2.0'
-
+    testImplementation 'org.mockito:mockito-core:2.19.0'
 
     androidTestImplementation "androidx.test.ext:junit:$rootProject.androidxJunitVersion"
 

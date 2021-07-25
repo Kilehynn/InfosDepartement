@@ -17,7 +17,6 @@ allprojects {
         google()
         mavenCentral()
         maven { url "https://jitpack.io/" }
-        jcenter() // Warning: this repository is going to shut down soon
     }
 }
 
@@ -34,6 +33,5 @@ ext {
     volleyVersion = '1.2.0'
     gsonVersion = '2.8.7'
     // testing
-    junitVersion = '4.13.2'
     androidxJunitVersion = '1.1.3'
 }
