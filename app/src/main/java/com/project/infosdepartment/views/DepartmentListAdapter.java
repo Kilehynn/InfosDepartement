@@ -14,6 +14,7 @@ import com.project.infosdepartment.model.database.entity.DepartmentsListEntity;
 
 import java.util.List;
 
+//Unused because I can't get to make the RecyclerView to work
 public class DepartmentListAdapter extends RecyclerView.Adapter<DepartmentViewHolder> {
 
     private final List<DepartmentsListEntity> departmentsListEntities;
