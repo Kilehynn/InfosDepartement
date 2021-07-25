@@ -4,6 +4,7 @@ import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
 
+import com.project.infosdepartment.model.database.entity.DepartmentEntity;
 import com.project.infosdepartment.model.database.entity.DepartmentsListEntity;
 
 import org.junit.Assert;
@@ -25,6 +26,7 @@ public class DepartmentRepositoryTest {
     @Before
     public void setUp() {
         departmentRepository = new DepartmentRepository(ApplicationProvider.getApplicationContext());
+        departmentRepository.resetCache();
     }
 
     @Test
@@ -39,18 +41,24 @@ public class DepartmentRepositoryTest {
 
     @Test
     public void testGetDepartmentInfo() {
-        String code = "78";
+        String codeYvelines = "78";
+        DepartmentEntity departmentEntity;
         try {
-            departmentRepository.getDepartmentInfo(code);
-        } catch (RuntimeException e) {
+            departmentEntity = departmentRepository.getDepartmentInfo(codeYvelines);
+            Assert.assertNull(departmentEntity);
+            Thread.sleep(1000);
+        } catch (RuntimeException | InterruptedException e) {
             Assert.fail();
         }
-        if (departmentRepository.getIfDataFetched(code) == 0) {
-            Assert.fail();
-        }
-        code = "456";
+        Assert.assertEquals(1, departmentRepository.getIfDataFetched(codeYvelines));
+
+        String invalidCode = "456";
         try {
-            departmentRepository.getDepartmentInfo(code);
+            departmentEntity = departmentRepository.getDepartmentInfo(invalidCode);
+            Assert.assertNull(departmentEntity);
+
+            departmentEntity = departmentRepository.getDepartmentInfo(codeYvelines);
+            Assert.assertNotNull(departmentEntity);
         } catch (RuntimeException ignored) {
         }
 
@@ -91,7 +99,8 @@ public class DepartmentRepositoryTest {
         }
         code = "456";
         try {
-            departmentRepository.getDepartmentInfo(code);
+            DepartmentEntity departmentEntity = departmentRepository.getDepartmentInfo(code);
+            Assert.assertNull(departmentEntity);
         } catch (RuntimeException ignored) {
         }
     }
@@ -107,11 +116,33 @@ public class DepartmentRepositoryTest {
         for (int i = 8; i < 15; i++) {
             String code = Integer.toString(i);
             try {
-                departmentRepository.getDepartmentInfoFromCache(code);
+                DepartmentEntity departmentEntity = departmentRepository.getDepartmentInfoFromCache(code);
+                Assert.assertNull(departmentEntity);
                 DepartmentsListEntity departmentsListEntity = departmentRepository.getDepartment(code);
                 Assert.assertEquals(zero, departmentsListEntity.getAreDataFetched());
-            } catch (RuntimeException ignored) {
+            } catch (RuntimeException e) {
             }
         }
+    }
+
+    @Test
+    public void testInsertDepartmentEntity() throws InterruptedException {
+        DepartmentEntity fakeDepartmentEntity = new DepartmentEntity("375", "JeN'ExistePas", 1, 2);
+        try {
+            DepartmentEntity departmentEntity = departmentRepository.getDepartmentInfoFromCache("375");
+            Assert.assertNull(departmentEntity);
+        } catch (RuntimeException ignored) {
+
+        }
+        departmentRepository.insert(fakeDepartmentEntity);
+        Thread.sleep(1000);
+        Integer one = 1;
+        Integer two = 2;
+        DepartmentEntity departmentEntity = departmentRepository.getDepartmentInfoFromCache("375");
+        Assert.assertNotNull(departmentEntity);
+        Assert.assertEquals("375", departmentEntity.getDepartmentCode());
+        Assert.assertEquals("JeN'ExistePas", departmentEntity.getDepartmentName());
+        Assert.assertEquals(two, departmentEntity.getNbTowns());
+        Assert.assertEquals(one, departmentEntity.getInhabitants());
     }
 }
