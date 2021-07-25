@@ -41,11 +41,13 @@ public class MainActivity extends AppCompatActivity {
         departmentViewModel = new ViewModelProvider(this).get(DepartmentViewModel.class);
 
         List<DepartmentsListEntity> departmentsListEntities = departmentViewModel.getDepartmentsListEntity();
+        //Because I am fetching the list of departments from the API, the user has to reload the app
+        // when he use it for the first time, otherwise the list will be empty
         if (departmentsListEntities.size() == 0) {
-            Toast.makeText(this, "Veuillez relancer l'application si cela est votre première utilisation", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.firstUse, Toast.LENGTH_LONG).show();
             LinearLayout layout = findViewById(R.id.linearLayout);
             TextView textView = new TextView(this);
-            textView.setText("Veuillez relancer l'application si cela est votre première utilisation.");
+            textView.setText(R.string.firstUse);
             textView.setPadding(16, 64, 16, 32);
             textView.setTextSize(20);
             textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
@@ -55,9 +57,11 @@ public class MainActivity extends AppCompatActivity {
             departmentsListEntityArrayAdapter = new ArrayAdapter<DepartmentsListEntity>(this, android.R.layout.simple_list_item_1, departmentsListEntities) {
             };
             listView.setAdapter(departmentsListEntityArrayAdapter);
-            //  listView.setLayoutManager(new LinearLayoutManager(this));
+            // Remaining code of an attempt to usue RecyclerView and LiveData but couldn't make it work,
+            // the RecyclerView remained empty
+            // listView.setLayoutManager(new LinearLayoutManager(this));
             // adapter.submitList(departmentsListEntities);
-            //departmentViewModel.cleanDatabase();
+
             setupGroupList();
         }
     }
@@ -68,13 +72,11 @@ public class MainActivity extends AppCompatActivity {
         ListView listView = findViewById(R.id.listView);
         listView.setOnItemClickListener((AdapterView<?> parent, View view, int position, long id) -> {
             DepartmentsListEntity departmentsListEntity = departmentsListEntityArrayAdapter.getItem(position);
-            // DepartmentEntity data = departmentViewModel.getDepartmentInfo(departmentsListEntity.getDepartmentCode());
-
             Intent intent = new Intent(this, InfoActivity.class);
             intent.putExtra("departmentCode", departmentsListEntity.getDepartmentCode());
             startActivity(intent);
         });
-
+        //Set up the searchView
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {

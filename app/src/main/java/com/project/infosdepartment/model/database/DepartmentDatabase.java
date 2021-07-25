@@ -37,7 +37,6 @@ public abstract class DepartmentDatabase extends RoomDatabase {
 
     private static volatile DepartmentDatabase instance = null;
 
-
     //TODO : Tried to do it with a callback, but couldn't make it work, to investigate
  /*   private static final RoomDatabase.Callback sRoomDatabaseCallback = new RoomDatabase.Callback() {
         @Override
@@ -100,10 +99,10 @@ public abstract class DepartmentDatabase extends RoomDatabase {
         try {
             anyDepartment = future.get();
         } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
+                throw new RuntimeException("Error while checking if the DB is full or not");
         }
         if (anyDepartment < 101) {
-            Log.i("[DEBUG][DepartmentDatabase]", "FillDB: Populating database.");
+            Log.d("[DEBUG][DepartmentDatabase]", "FillDB: Populating database.");
             JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null, response -> {
                 ArrayList<DepartmentsListEntity> departmentsListEntities = new ArrayList<>();
                 for (int i = 0; i < response.length(); i++) {
@@ -111,8 +110,8 @@ public abstract class DepartmentDatabase extends RoomDatabase {
                         JSONObject current = response.getJSONObject(i);
                         String departmentName = current.getString("nom");
                         String departmentCode = current.getString("code");
-                        Log.i("[DEBUG][DepartmentDatabase]", "onResponse: Create Department Entity.");
-                        Log.i("[DEBUG][DepartmentDatabase]", "onResponse: Department " + (i + 1) + " out of " + response.length() + ".");
+                        Log.d("[DEBUG][DepartmentDatabase]", "onResponse: Create Department Entity.");
+                        Log.d("[DEBUG][DepartmentDatabase]", "onResponse: Department " + (i + 1) + " out of " + response.length() + ".");
                         DepartmentsListEntity departmentEntity = new DepartmentsListEntity(departmentCode, departmentName);
                         departmentsListEntities.add(departmentEntity);
                     } catch (JSONException e) {
@@ -124,18 +123,15 @@ public abstract class DepartmentDatabase extends RoomDatabase {
                 try {
                     insertFuture.get();
                 } catch (ExecutionException | InterruptedException e) {
-                    e.printStackTrace();
+                    throw new RuntimeException("Error while inserting the list of departments");
                 }
             }, error -> {
-                // TODO: Handle error
+                throw new RuntimeException("Error while fetching the list of departments");
             });
             requestQueue.add(jsonArrayRequest);
         } else {
-            Log.i("[DEBUG][DepartmentDatabase]", "FillDB: Database is full.");
-        }/*
-        databaseWriteExecutor.execute(() -> {
-      List<DepartmentsListEntity> anyDepartment = departmentsListDao.getAnyDepartment();
-        });*/
+            Log.d("[DEBUG][DepartmentDatabase]", "FillDB: Database is full.");
+        }
 
     }
 

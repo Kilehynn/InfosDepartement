@@ -1,7 +1,6 @@
 package com.project.infosdepartment.viewmodel;
 
 import android.app.Application;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -20,14 +19,6 @@ public class InfoViewModel extends AndroidViewModel {
     public InfoViewModel(@NonNull Application application) {
         super(application);
         departmentRepository = new DepartmentRepository(application);
-    }
-
-    public void setInfo(DepartmentEntity entity) {
-        Log.i("[DEBUG][INFO]", "setInfo: ");
-        this.departmentCode = entity.getDepartmentCode();
-        this.departmentName = entity.getDepartmentName();
-        this.departmentInhabitant = entity.getInhabitants();
-        this.departmentTowns = entity.getNbTowns();
     }
 
     public String getDepartmentName() {

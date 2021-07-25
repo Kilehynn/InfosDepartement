@@ -19,6 +19,8 @@ import com.project.infosdepartment.viewmodel.InfoViewModel;
 import com.richpath.RichPath;
 import com.richpath.RichPathView;
 
+import java.util.Objects;
+
 public class InfoActivity extends AppCompatActivity {
 
     InfoViewModel infoViewModel;
@@ -50,6 +52,7 @@ public class InfoActivity extends AppCompatActivity {
         DepartmentDatabase.getDatabaseWriteExecutor().execute(() -> {
             DepartmentEntity departmentEntity = infoViewModel.getDepartmentInfo(departmentCode);
 
+            //Sleep the thread and loop while the insertion hasn't been finished
             while (departmentEntity == null) {
 
                 departmentEntity = infoViewModel.getDepartmentInfo(departmentCode);
@@ -64,14 +67,9 @@ public class InfoActivity extends AppCompatActivity {
 
             DepartmentEntity finalDepartmentEntity = departmentEntity;
             runOnUiThread(() -> {
-
+                //set up the UI
                 setUpUI(departmentCode, finalDepartmentEntity, this.toolbar);
 
-                String departmentName = finalDepartmentEntity.getDepartmentName();
-                toolbar.setTitle("(" + departmentCode + ") " + departmentName);
-                setSupportActionBar(toolbar);
-                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-                getSupportActionBar().setDisplayShowHomeEnabled(true);
             });
         });
 
@@ -96,6 +94,10 @@ public class InfoActivity extends AppCompatActivity {
         } else {
             ((ViewGroup) notificationsRichPathView.getParent()).removeView(notificationsRichPathView);
         }
+        toolbar.setTitle("(" + departmentCode + ") " + departmentName);
+        setSupportActionBar(toolbar);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
     }
 
     @Override

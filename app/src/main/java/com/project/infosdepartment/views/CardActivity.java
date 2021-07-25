@@ -11,6 +11,8 @@ import androidx.appcompat.widget.Toolbar;
 import com.project.infosdepartment.R;
 import com.richpath.RichPathView;
 
+import java.util.Objects;
+
 public class CardActivity extends AppCompatActivity {
 
     @Override
@@ -20,7 +22,7 @@ public class CardActivity extends AppCompatActivity {
         setContentView(R.layout.activity_card);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         RichPathView notificationsRichPathView = findViewById(R.id.departmentPosition);
