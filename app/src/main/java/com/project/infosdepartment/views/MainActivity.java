@@ -10,7 +10,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SearchView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -57,18 +56,10 @@ public class MainActivity extends AppCompatActivity {
         ListView listView = findViewById(R.id.listView);
         listView.setOnItemClickListener((AdapterView<?> parent, View view, int position, long id) -> {
             DepartmentsListEntity departmentsListEntity = departmentsListEntityArrayAdapter.getItem(position);
-
-            if (0 == departmentViewModel.getIfDataFetched(departmentsListEntity.getDepartmentCode()))//departmentsListEntity.getAreDataFetched())
-            {
-                Toast.makeText(this, "Get data from API and cache them", Toast.LENGTH_SHORT).show();
-
-            } else {
-                Toast.makeText(this, "Get data from cache", Toast.LENGTH_SHORT).show();
-            }
             // DepartmentEntity data = departmentViewModel.getDepartmentInfo(departmentsListEntity.getDepartmentCode());
 
             Intent intent = new Intent(this, InfoActivity.class);
-            intent.putExtra("departmentName", departmentsListEntity.getDepartmentCode());
+            intent.putExtra("departmentCode", departmentsListEntity.getDepartmentCode());
             startActivity(intent);
 
             //   departmentsListEntity.setAreDataFetched(1);

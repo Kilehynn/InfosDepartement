@@ -11,6 +11,7 @@ import org.json.JSONObject;
 
 public class FetchInfoCallback {
 
+    //Unused because as a callback, I can't know when it'll be execute
     public void onSuccess(JSONArray result, DepartmentRepository departmentRepository, String departmentCode) {
         String departmentName = "";
         int nbTowns = result.length();

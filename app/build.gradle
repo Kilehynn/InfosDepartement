@@ -15,6 +15,9 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+    dataBinding {
+        enabled = true
+    }
     buildFeatures {
         dataBinding true
     }
@@ -51,7 +54,7 @@ dependencies {
     // UI
     implementation "androidx.constraintlayout:constraintlayout:$rootProject.constraintLayoutVersion"
     implementation "com.google.android.material:material:$rootProject.materialVersion"
-
+    implementation 'com.github.tarek360.RichPath:animator:0.1.1'
     // Testing
     testImplementation "junit:junit:$rootProject.junitVersion"
 

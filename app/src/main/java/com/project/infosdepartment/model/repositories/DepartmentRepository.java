@@ -13,7 +13,9 @@ import com.project.infosdepartment.model.database.dao.DepartmentsDao;
 import com.project.infosdepartment.model.database.dao.DepartmentsListDao;
 import com.project.infosdepartment.model.database.entity.DepartmentEntity;
 import com.project.infosdepartment.model.database.entity.DepartmentsListEntity;
-import com.project.infosdepartment.model.utils.FetchInfoCallback;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -57,11 +59,37 @@ public class DepartmentRepository {
         return departmentEndpoint;
     }
 
-    public void fetchInfo(String code, FetchInfoCallback infoCallback) {
+    public void fetchInfo(String code) {
         Log.d("[DEBUG][DepartmentRepository]", "fetchInfo : Department number " + code);
         RequestQueue requestQueue = Volley.newRequestQueue(ctx);
         String url = getUrlDepartmentEndpoint() + code + townEndpoint + fields + "departement,population" + format;
-        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null, response -> infoCallback.onSuccess(response, this, code), error ->
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null, response -> {
+            String departmentName = "";
+            int nbTowns = response.length();
+            int inhabitants = 0;
+            for (int i = 0; i < nbTowns; i++) {
+                try {
+                    JSONObject currentObject = response.getJSONObject(i);
+                    if (i == 0) {
+                        JSONObject departmentInfo = currentObject.getJSONObject("departement");
+                        departmentName = departmentInfo.getString("nom");
+                    }
+                    inhabitants += currentObject.getInt("population");
+                } catch (JSONException e) {
+
+                    Log.e("[ERROR][FetchInfoCallback]", "onSuccess: An error occurred when converting an element from a JsonArray to a JsonObject.");
+                }
+
+            }
+            Log.d("[DEBUG][fetchInfoCallback]", "onSuccess : Insert new DepartementEntity in Department Database\n" +
+                    "Department Code : " + code + "\n" +
+                    "Department Name : " + departmentName + "\n" +
+                    "Number of Towns : " + nbTowns + "\n" +
+                    "Number of inhabitants : " + inhabitants + "\n");
+            DepartmentEntity entity = new DepartmentEntity(code, departmentName, inhabitants, nbTowns);
+            insert(entity);
+            setTrueBoolDepartment(code);
+        }, error ->
         {
             // TODO: Handle error
         });
@@ -78,7 +106,7 @@ public class DepartmentRepository {
             Log.d("[DEBUG][DepartmentRepository]", "getDepartmentInfo : Data already in cache");
 
         } else {
-            fetchInfo(code, new FetchInfoCallback());
+            fetchInfo(code);
         }
         future = DepartmentDatabase.getDatabaseWriteExecutor().submit(() -> departmentsDao.getDepartmentFromCode(code));
         try {
