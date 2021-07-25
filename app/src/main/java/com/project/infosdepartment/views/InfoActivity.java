@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -74,10 +75,13 @@ public class InfoActivity extends AppCompatActivity {
                 ((TextView) findViewById(R.id.departmentName)).setText(departmentNameText);
 
                 RichPathView notificationsRichPathView = findViewById(R.id.departmentPosition);
-                notificationsRichPathView.setVisibility(View.VISIBLE);
                 RichPath dept = notificationsRichPathView.findRichPathByName(String.valueOf(departmentCode));
-                dept.setFillColor(Color.RED);
-
+                if (dept != null) {
+                    dept.setFillColor(Color.RED);
+                    notificationsRichPathView.setVisibility(View.VISIBLE);
+                } else {
+                    ((ViewGroup) notificationsRichPathView.getParent()).removeView(notificationsRichPathView);
+                }
                 toolbar.setTitle("(" + departmentCode + ") " + departmentName);
                 setSupportActionBar(toolbar);
                 getSupportActionBar().setDisplayHomeAsUpEnabled(true);
