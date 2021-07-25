@@ -28,6 +28,9 @@ public class DepartmentEntity {
     private final Integer nbTowns;
 
     public DepartmentEntity(@NonNull String departmentCode, @NonNull String departmentName, Integer inhabitants, Integer nbTowns) {
+        if (departmentCode.equals("") || departmentName.equals("") || inhabitants == 0 || nbTowns == 0) {
+            throw new IllegalArgumentException("Illegal argument when creating a DepartmentEntity");
+        }
         this.departmentCode = departmentCode;
         this.departmentName = departmentName;
         this.inhabitants = inhabitants;

@@ -26,6 +26,9 @@ public class DepartmentsListEntity {
 
 
     public DepartmentsListEntity(@NonNull String departmentCode, @NonNull String departmentName) {
+        if (departmentCode.equals("") || departmentName.equals("")) {
+            throw new IllegalArgumentException("Illegal argument when creating a DepartmentListEntity");
+        }
         this.departmentCode = departmentCode;
         this.departmentName = departmentName;
         Log.i("[DEBUG][DepartmentsListEntity]", "Ctr : department number " + departmentCode + " , " + departmentName);
