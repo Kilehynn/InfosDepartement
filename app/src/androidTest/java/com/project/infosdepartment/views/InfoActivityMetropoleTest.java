@@ -42,7 +42,6 @@ public class InfoActivityMetropoleTest extends TestCase {
 
         TextView departmentCode = activity.findViewById(R.id.departmentCode);
         while (departmentCode.getText().toString().equals("")) {
-
         }
 
         assertThat(departmentCode, notNullValue());
@@ -51,6 +50,8 @@ public class InfoActivityMetropoleTest extends TestCase {
 
 
         TextView department = activity.findViewById(R.id.departmentName);
+        while (departmentCode.getText().toString().equals("")) {
+        }
         assertThat(department, notNullValue());
         assertThat(department, instanceOf(TextView.class));
         assertEquals("Département : Yvelines", department.getText().toString());
@@ -69,6 +70,4 @@ public class InfoActivityMetropoleTest extends TestCase {
         View departmentPosition = activity.findViewById(R.id.departmentPosition);
         assertEquals(View.VISIBLE, departmentPosition.getVisibility());
     }
-
-
 }
