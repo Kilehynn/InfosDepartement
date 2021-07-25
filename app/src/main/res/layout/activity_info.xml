@@ -25,7 +25,6 @@
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
             android:elevation="4dp"
-
             android:minHeight="?attr/actionBarSize"
             android:theme="?attr/actionBarTheme" />
 

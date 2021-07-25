@@ -94,6 +94,9 @@ public class MainActivity extends AppCompatActivity {
 
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.interactiveCard:
+                showInteractiveCard();
+                return true;
             case R.id.refresh:
                 departmentViewModel.resetCache();
                 return true;
@@ -102,5 +105,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void showInteractiveCard() {
+        Intent intent = new Intent(this, CardActivity.class);
+        startActivity(intent);
+    }
 
 }

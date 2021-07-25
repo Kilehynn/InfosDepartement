@@ -28,7 +28,7 @@ public class InfoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_info);
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.toolbar);
 
 
         Bundle extra = getIntent().getExtras();
@@ -64,24 +64,9 @@ public class InfoActivity extends AppCompatActivity {
             DepartmentEntity finalDepartmentEntity = departmentEntity;
             runOnUiThread(() -> {
 
-                String departmentCodeText = "Code départemental : " + finalDepartmentEntity.getDepartmentCode();
-                String departmentInhabitants = "Population : " + finalDepartmentEntity.getInhabitants();
-                String departmentTowns = "Nombre de communes : " + finalDepartmentEntity.getNbTowns();
-                String departmentName = finalDepartmentEntity.getDepartmentName();
-                String departmentNameText = "Département : " + departmentName;
-                ((TextView) findViewById(R.id.departmentCode)).setText(departmentCodeText);
-                ((TextView) findViewById(R.id.departmentInhabitants)).setText(departmentInhabitants);
-                ((TextView) findViewById(R.id.departmentTowns)).setText(departmentTowns);
-                ((TextView) findViewById(R.id.departmentName)).setText(departmentNameText);
+                setUpUI(departmentCode, finalDepartmentEntity, this.toolbar);
 
-                RichPathView notificationsRichPathView = findViewById(R.id.departmentPosition);
-                RichPath dept = notificationsRichPathView.findRichPathByName(String.valueOf(departmentCode));
-                if (dept != null) {
-                    dept.setFillColor(Color.RED);
-                    notificationsRichPathView.setVisibility(View.VISIBLE);
-                } else {
-                    ((ViewGroup) notificationsRichPathView.getParent()).removeView(notificationsRichPathView);
-                }
+                String departmentName = finalDepartmentEntity.getDepartmentName();
                 toolbar.setTitle("(" + departmentCode + ") " + departmentName);
                 setSupportActionBar(toolbar);
                 getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -89,6 +74,27 @@ public class InfoActivity extends AppCompatActivity {
             });
         });
 
+    }
+
+    private void setUpUI(String departmentCode, DepartmentEntity finalDepartmentEntity, Toolbar toolbar) {
+        String departmentCodeText = "Code départemental : " + finalDepartmentEntity.getDepartmentCode();
+        String departmentInhabitants = "Population : " + finalDepartmentEntity.getInhabitants();
+        String departmentTowns = "Nombre de communes : " + finalDepartmentEntity.getNbTowns();
+        String departmentName = finalDepartmentEntity.getDepartmentName();
+        String departmentNameText = "Département : " + departmentName;
+        ((TextView) findViewById(R.id.departmentCode)).setText(departmentCodeText);
+        ((TextView) findViewById(R.id.departmentInhabitants)).setText(departmentInhabitants);
+        ((TextView) findViewById(R.id.departmentTowns)).setText(departmentTowns);
+        ((TextView) findViewById(R.id.departmentName)).setText(departmentNameText);
+
+        RichPathView notificationsRichPathView = findViewById(R.id.departmentPosition);
+        RichPath dept = notificationsRichPathView.findRichPathByName(String.valueOf(departmentCode));
+        if (dept != null) {
+            dept.setFillColor(Color.RED);
+            notificationsRichPathView.setVisibility(View.VISIBLE);
+        } else {
+            ((ViewGroup) notificationsRichPathView.getParent()).removeView(notificationsRichPathView);
+        }
     }
 
     @Override
