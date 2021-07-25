@@ -20,14 +20,15 @@ public class CardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setTheme(R.style.Theme_AppCompat_Light_NoActionBar);
         setContentView(R.layout.activity_card);
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        RichPathView notificationsRichPathView = findViewById(R.id.departmentPosition);
 
         Context context = this;
+        RichPathView notificationsRichPathView = findViewById(R.id.departmentPosition);
 
         notificationsRichPathView.setOnPathClickListener(richPath -> {
             String departmentCode = richPath.getName();

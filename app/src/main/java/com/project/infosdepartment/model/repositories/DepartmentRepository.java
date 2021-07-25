@@ -63,108 +63,138 @@ public class DepartmentRepository {
         return departmentEndpoint;
     }
 
-    public void fetchInfo(String code) {
-        Log.d("[DEBUG][DepartmentRepository]", "fetchInfo : Department number " + code);
-        RequestQueue requestQueue = Volley.newRequestQueue(ctx);
-        String url = getUrlDepartmentEndpoint() + code + townEndpoint + fields + "departement,population" + format;
-        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null, response -> {
-            String departmentName = "";
-            int nbTowns = response.length();
-            int inhabitants = 0;
-            for (int i = 0; i < nbTowns; i++) {
-                try {
-                    JSONObject currentObject = response.getJSONObject(i);
-                    if (i == 0) {
-                        //Get the department name
-                        JSONObject departmentInfo = currentObject.getJSONObject("departement");
-                        departmentName = departmentInfo.getString("nom");
-                    }
-                    //Get the number of inhabitants in the department based on the number of inhabitants per towns
-                    inhabitants += currentObject.getInt("population");
-                } catch (JSONException e) {
-                    Log.e("[ERROR][FetchInfoCallback]", "onSuccess: An error occurred when converting an element from a JsonArray to a JsonObject.");
-                    throw new RuntimeException("onSuccess: An error occurred when converting an element from a JsonArray to a JsonObject.");
-                }
-
-            }
-            Log.d("[DEBUG][fetchInfoCallback]", "onSuccess : Insert new DepartementEntity in Department Database\n" +
-                    "Department Code : " + code + "\n" +
-                    "Department Name : " + departmentName + "\n" +
-                    "Number of Towns : " + nbTowns + "\n" +
-                    "Number of inhabitants : " + inhabitants + "\n");
-            DepartmentEntity entity = new DepartmentEntity(code, departmentName, inhabitants, nbTowns);
-            // Add the entity to the DB and set areDataFetch to true to avoid future call to API5743
-
-            insert(entity);
-            setTrueBoolDepartment(code);
-        }, error ->
-        {
-            throw new RuntimeException("Error while fetching the info about " + code + " from the API.");
-        });
-        requestQueue.add(jsonArrayRequest);
-    }
-
-
-    public DepartmentEntity getDepartmentInfo(String code) {
+    public DepartmentEntity getDepartmentEntity(String code) {
         DepartmentEntity res;
         Future<DepartmentEntity> future;
 
         Log.d("[DEBUG][DepartmentRepository]", "getDepartmentInfo : Department number " + code);
-        //Check if the data has already been fetched
-        if (getIfDataFetched(code) == 1) {
-            Log.d("[DEBUG][DepartmentRepository]", "getDepartmentInfo : Data already in cache");
 
+        //Check if the data has already been fetched
+
+        if (isDataFetched(code) == 1) {
+            Log.d("[DEBUG][DepartmentRepository]", "getDepartmentInfo : Data already in cache");
         } else {
             fetchInfo(code);
         }
+
         future = DepartmentDatabase.getDatabaseWriteExecutor().submit(() -> departmentsDao.getDepartmentFromCode(code));
+
         try {
             //Get the resulting DepartmentEntity in the DB
             res = future.get();
+
         } catch (ExecutionException | InterruptedException e) {
             throw new RuntimeException("Error while getting the Department Entity from its code");
         }
+
         return res;
     }
 
     //Helper function for tests
-    public DepartmentEntity getDepartmentInfoFromCache(String code) {
-        DepartmentEntity res = null;
+    public DepartmentEntity getDepartmentEntityFromCache(String code) {
+        DepartmentEntity res;
         Future<DepartmentEntity> future = DepartmentDatabase.getDatabaseWriteExecutor().submit(() -> departmentsDao.getDepartmentFromCode(code));
+
         try {
             res = future.get();
         } catch (ExecutionException | InterruptedException e) {
             throw new RuntimeException("Error while getting the Department Entity from its code");
         }
-        return res;
-    }
 
-    //Get all the departments
-    public List<DepartmentsListEntity> getDepartmentsList() {
-        List<DepartmentsListEntity> res = null;
-        Future<List<DepartmentsListEntity>> future = DepartmentDatabase.getDatabaseWriteExecutor().submit(departmentsListDao::getDepartmentsList);
-        try {
-            res = future.get();
-        } catch (ExecutionException | InterruptedException e) {
-            throw new RuntimeException("Error while getting all the DepartmentListEntity from the DB");
-        }
         return res;
-    }
-
-    //Insert the DepartmentListEntity in the DB
-    public void insert(DepartmentsListEntity departmentsListEntity) {
-        DepartmentDatabase.getDatabaseWriteExecutor().execute(() -> departmentsListDao.insert(departmentsListEntity));
     }
 
     public DepartmentsListEntity getDepartment(String departmentCode) {
         DepartmentsListEntity res;
         Future<DepartmentsListEntity> future = DepartmentDatabase.getDatabaseWriteExecutor().submit(() -> departmentsListDao.getDepartment(departmentCode));
+
         try {
             res = future.get();
         } catch (ExecutionException | InterruptedException e) {
             throw new RuntimeException("Error while getting a DepartmentListEntity from its code");
         }
+
         return res;
+    }
+
+    //Get all the departments
+    public List<DepartmentsListEntity> getDepartmentsList() {
+        List<DepartmentsListEntity> res;
+        Future<List<DepartmentsListEntity>> future = DepartmentDatabase.getDatabaseWriteExecutor().submit(departmentsListDao::getDepartmentsList);
+
+        try {
+            res = future.get();
+        } catch (ExecutionException | InterruptedException e) {
+            throw new RuntimeException("Error while getting all the DepartmentListEntity from the DB");
+        }
+
+        return res;
+    }
+
+    public int isDataFetched(String departmentCode) {
+        int res;
+        Future<Integer> future = DepartmentDatabase.getDatabaseWriteExecutor().submit(() -> departmentsListDao.getIfDataFetched(departmentCode));
+
+        try {
+            res = future.get();
+        } catch (ExecutionException | InterruptedException e) {
+            throw new RuntimeException("Error while getting the result of the insertion of a DepartmentListEntity");
+        }
+
+        return res;
+    }
+
+    public void fetchInfo(String code) {
+        Log.d("[DEBUG][DepartmentRepository]", "fetchInfo : Department number " + code);
+
+        RequestQueue requestQueue = Volley.newRequestQueue(ctx);
+        String url = getUrlDepartmentEndpoint() + code + townEndpoint + fields + "departement,population" + format;
+
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null, response -> {
+
+            String departmentName = "";
+            int nbTowns = response.length();
+            int inhabitants = 0;
+
+            for (int i = 0; i < nbTowns; i++) {
+                try {
+                    JSONObject currentObject = response.getJSONObject(i);
+
+                    if (i == 0) {
+                        //Get the department name
+                        JSONObject departmentInfo = currentObject.getJSONObject("departement");
+                        departmentName = departmentInfo.getString("nom");
+                    }
+
+                    //Get the number of inhabitants in the department based on the number of inhabitants per towns
+                    inhabitants += currentObject.getInt("population");
+
+                } catch (JSONException e) {
+                    Log.e("[ERROR][FetchInfoCallback]", "onSuccess: An error occurred when converting an element from a JsonArray to a JsonObject.");
+                    throw new RuntimeException("onSuccess: An error occurred when converting an element from a JsonArray to a JsonObject.");
+                }
+            }
+
+            Log.d("[DEBUG][fetchInfoCallback]", "onSuccess : Insert new DepartementEntity in Department Database\n" +
+                    "Department Code : " + code + "\n" +
+                    "Department Name : " + departmentName + "\n" +
+                    "Number of Towns : " + nbTowns + "\n" +
+                    "Number of inhabitants : " + inhabitants + "\n");
+
+            DepartmentEntity entity = new DepartmentEntity(code, departmentName, inhabitants, nbTowns);
+            insert(entity);
+            setTrueBoolDepartment(code);
+
+        }, error -> {
+            throw new RuntimeException("Error while fetching the info about " + code + " from the API.");
+        });
+
+        requestQueue.add(jsonArrayRequest);
+    }
+
+
+    public void insert(DepartmentsListEntity departmentsListEntity) {
+        DepartmentDatabase.getDatabaseWriteExecutor().execute(() -> departmentsListDao.insert(departmentsListEntity));
     }
 
     public void insert(DepartmentEntity entity) {
@@ -172,25 +202,13 @@ public class DepartmentRepository {
             departmentsDao.insert(entity);
             return true;
         });
+
         try {
             future.get();
         } catch (ExecutionException | InterruptedException e) {
             throw new RuntimeException("Error while inserting a DepartmentEntity");
         }
     }
-
-    public int getIfDataFetched(String departmentCode) {
-        int res;
-        Future<Integer> future = DepartmentDatabase.getDatabaseWriteExecutor().submit(() -> departmentsListDao.getIfDataFetched(departmentCode));
-        try {
-            res = future.get();
-        } catch (ExecutionException | InterruptedException e) {
-            throw new RuntimeException("Error while getting the result of the insertion of a DepartmentListEntity");
-        }
-        return res;
-
-    }
-
 
     public void setTrueBoolDepartment(String departmentCode) {
         DepartmentDatabase.getDatabaseWriteExecutor().execute(() -> departmentsListDao.setTrueBoolDepartment(departmentCode));

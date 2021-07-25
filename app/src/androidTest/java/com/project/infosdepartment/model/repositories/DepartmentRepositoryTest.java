@@ -44,20 +44,20 @@ public class DepartmentRepositoryTest {
         String codeYvelines = "78";
         DepartmentEntity departmentEntity;
         try {
-            departmentEntity = departmentRepository.getDepartmentInfo(codeYvelines);
+            departmentEntity = departmentRepository.getDepartmentEntity(codeYvelines);
             Assert.assertNull(departmentEntity);
             Thread.sleep(1000);
         } catch (RuntimeException | InterruptedException e) {
             Assert.fail();
         }
-        Assert.assertEquals(1, departmentRepository.getIfDataFetched(codeYvelines));
+        Assert.assertEquals(1, departmentRepository.isDataFetched(codeYvelines));
 
         String invalidCode = "456";
         try {
-            departmentEntity = departmentRepository.getDepartmentInfo(invalidCode);
+            departmentEntity = departmentRepository.getDepartmentEntity(invalidCode);
             Assert.assertNull(departmentEntity);
 
-            departmentEntity = departmentRepository.getDepartmentInfo(codeYvelines);
+            departmentEntity = departmentRepository.getDepartmentEntity(codeYvelines);
             Assert.assertNotNull(departmentEntity);
         } catch (RuntimeException ignored) {
         }
@@ -99,7 +99,7 @@ public class DepartmentRepositoryTest {
         }
         code = "456";
         try {
-            DepartmentEntity departmentEntity = departmentRepository.getDepartmentInfo(code);
+            DepartmentEntity departmentEntity = departmentRepository.getDepartmentEntity(code);
             Assert.assertNull(departmentEntity);
         } catch (RuntimeException ignored) {
         }
@@ -110,13 +110,13 @@ public class DepartmentRepositoryTest {
         Integer zero = 0;
         List<String> departmentCodes = new ArrayList<>(Arrays.asList("08", "09", "10", "11", "12", "13", "14", "15"));
         for (String code : departmentCodes) {
-            departmentRepository.getDepartmentInfo(code);
+            departmentRepository.getDepartmentEntity(code);
         }
         departmentRepository.resetCache();
         for (int i = 8; i < 15; i++) {
             String code = Integer.toString(i);
             try {
-                DepartmentEntity departmentEntity = departmentRepository.getDepartmentInfoFromCache(code);
+                DepartmentEntity departmentEntity = departmentRepository.getDepartmentEntityFromCache(code);
                 Assert.assertNull(departmentEntity);
                 DepartmentsListEntity departmentsListEntity = departmentRepository.getDepartment(code);
                 Assert.assertEquals(zero, departmentsListEntity.getAreDataFetched());
@@ -129,7 +129,7 @@ public class DepartmentRepositoryTest {
     public void testInsertDepartmentEntity() throws InterruptedException {
         DepartmentEntity fakeDepartmentEntity = new DepartmentEntity("375", "JeN'ExistePas", 1, 2);
         try {
-            DepartmentEntity departmentEntity = departmentRepository.getDepartmentInfoFromCache("375");
+            DepartmentEntity departmentEntity = departmentRepository.getDepartmentEntityFromCache("375");
             Assert.assertNull(departmentEntity);
         } catch (RuntimeException ignored) {
 
@@ -138,7 +138,7 @@ public class DepartmentRepositoryTest {
         Thread.sleep(1000);
         Integer one = 1;
         Integer two = 2;
-        DepartmentEntity departmentEntity = departmentRepository.getDepartmentInfoFromCache("375");
+        DepartmentEntity departmentEntity = departmentRepository.getDepartmentEntityFromCache("375");
         Assert.assertNotNull(departmentEntity);
         Assert.assertEquals("375", departmentEntity.getDepartmentCode());
         Assert.assertEquals("JeN'ExistePas", departmentEntity.getDepartmentName());
@@ -150,10 +150,10 @@ public class DepartmentRepositoryTest {
     @Test
     public void testSetTrueDataFetched() throws InterruptedException {
         String code = "78";
-        Assert.assertEquals(0, departmentRepository.getIfDataFetched(code));
+        Assert.assertEquals(0, departmentRepository.isDataFetched(code));
         departmentRepository.setTrueBoolDepartment(code);
         Thread.sleep(1000);
-        Assert.assertEquals(1, departmentRepository.getIfDataFetched(code));
+        Assert.assertEquals(1, departmentRepository.isDataFetched(code));
 
     }
 }

@@ -41,41 +41,51 @@ public class MainActivity extends AppCompatActivity {
         departmentViewModel = new ViewModelProvider(this).get(DepartmentViewModel.class);
 
         List<DepartmentsListEntity> departmentsListEntities = departmentViewModel.getDepartmentsListEntity();
+
         //Because I am fetching the list of departments from the API, the user has to reload the app
         // when he use it for the first time, otherwise the list will be empty
         if (departmentsListEntities.size() == 0) {
-            Toast.makeText(this, R.string.firstUse, Toast.LENGTH_LONG).show();
-            LinearLayout layout = findViewById(R.id.linearLayout);
-            TextView textView = new TextView(this);
-            textView.setText(R.string.firstUse);
-            textView.setPadding(16, 64, 16, 32);
-            textView.setTextSize(20);
-            textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-            layout.addView(textView);
-            layout.removeView(listView);
+            removeListView(listView);
         } else {
             departmentsListEntityArrayAdapter = new ArrayAdapter<DepartmentsListEntity>(this, android.R.layout.simple_list_item_1, departmentsListEntities) {
             };
             listView.setAdapter(departmentsListEntityArrayAdapter);
-            // Remaining code of an attempt to usue RecyclerView and LiveData but couldn't make it work,
+            setupGroupList();
+
+            // Remaining code of an attempt to use RecyclerView and LiveData but couldn't make it work,
             // the RecyclerView remained empty
             // listView.setLayoutManager(new LinearLayoutManager(this));
             // adapter.submitList(departmentsListEntities);
-
-            setupGroupList();
         }
+    }
+
+    private void removeListView(ListView listView) {
+
+        Toast.makeText(this, R.string.firstUse, Toast.LENGTH_LONG).show();
+        LinearLayout layout = findViewById(R.id.linearLayout);
+        TextView textView = new TextView(this);
+
+        textView.setText(R.string.firstUse);
+        textView.setPadding(16, 64, 16, 32);
+        textView.setTextSize(20);
+        textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+
+        layout.addView(textView);
+        layout.removeView(listView);
     }
 
     private void setupGroupList() {
 
         SearchView searchView = findViewById(R.id.searchView);
         ListView listView = findViewById(R.id.listView);
+
         listView.setOnItemClickListener((AdapterView<?> parent, View view, int position, long id) -> {
             DepartmentsListEntity departmentsListEntity = departmentsListEntityArrayAdapter.getItem(position);
             Intent intent = new Intent(this, InfoActivity.class);
             intent.putExtra("departmentCode", departmentsListEntity.getDepartmentCode());
             startActivity(intent);
         });
+
         //Set up the searchView
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -83,7 +93,6 @@ public class MainActivity extends AppCompatActivity {
                 departmentsListEntityArrayAdapter.getFilter().filter(query);
                 return false;
             }
-
 
             @Override
             public boolean onQueryTextChange(String newText) {
@@ -105,9 +114,11 @@ public class MainActivity extends AppCompatActivity {
             case R.id.interactiveCard:
                 showInteractiveCard();
                 return true;
+
             case R.id.refresh:
                 departmentViewModel.resetCache();
                 return true;
+
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -117,5 +128,4 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, CardActivity.class);
         startActivity(intent);
     }
-
 }

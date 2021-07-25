@@ -28,15 +28,14 @@ public class DepartmentViewModel extends AndroidViewModel {
 
     public void cleanDatabase() {
         departmentRepository.deleteAll();
-
     }
 
     public DepartmentEntity getDepartmentInfo(String departmentCode) {
-        return departmentRepository.getDepartmentInfo(departmentCode);
+        return departmentRepository.getDepartmentEntity(departmentCode);
     }
 
     public int getIfDataFetched(String departmentCode) {
-        return departmentRepository.getIfDataFetched(departmentCode);
+        return departmentRepository.isDataFetched(departmentCode);
     }
 
     public void resetCache() {

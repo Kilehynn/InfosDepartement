@@ -31,7 +31,7 @@ public class DepartmentsListEntity {
         }
         this.departmentCode = departmentCode;
         this.departmentName = departmentName;
-        Log.i("[DEBUG][DepartmentsListEntity]", "Ctr : department number " + departmentCode + " , " + departmentName);
+        Log.d("[DEBUG][DepartmentsListEntity]", "Ctr : department number " + departmentCode + " , " + departmentName);
     }
 
     @NonNull
@@ -54,6 +54,7 @@ public class DepartmentsListEntity {
     }
 
 
+    @NonNull
     @Override
     public String toString() {
         return "(" + departmentCode + ") - " + departmentName;

@@ -38,11 +38,11 @@ public class InfoViewModel extends AndroidViewModel {
     }
 
     public int getIfDataFetched(String departmentCode) {
-        return departmentRepository.getIfDataFetched(departmentCode);
+        return departmentRepository.isDataFetched(departmentCode);
     }
 
     public DepartmentEntity getDepartmentInfo(String departmentCode) {
-        return departmentRepository.getDepartmentInfo(departmentCode);
+        return departmentRepository.getDepartmentEntity(departmentCode);
     }
 
 }

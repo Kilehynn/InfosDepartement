@@ -37,7 +37,8 @@ public abstract class DepartmentDatabase extends RoomDatabase {
 
     private static volatile DepartmentDatabase instance = null;
 
-    //TODO : Tried to do it with a callback, but couldn't make it work, to investigate
+    // Tried to do it with a callback, but couldn't make it work, to investigate
+
  /*   private static final RoomDatabase.Callback sRoomDatabaseCallback = new RoomDatabase.Callback() {
         @Override
         public void onCreate(@NonNull SupportSQLiteDatabase db) {
@@ -61,12 +62,10 @@ public abstract class DepartmentDatabase extends RoomDatabase {
 
                     } catch (JSONException e) {
                         Log.e("[ERROR][DepartmentDatabase]", "onResponse: An error occurred when populating the database.");
-                        // TODO: Handle error
                     }
                 }
 
             }, error -> {
-                // TODO: Handle error
             });
             requestQueue.add(jsonArrayRequest);
         }
@@ -94,31 +93,32 @@ public abstract class DepartmentDatabase extends RoomDatabase {
         RequestQueue requestQueue = Volley.newRequestQueue(ctx);
         String url = DepartmentRepository.getUrlDepartmentEndpoint();
         DepartmentsListDao departmentsListDao = instance.departmentsListDao();
-        Integer anyDepartment = 0;
-        Future<Integer> future = databaseWriteExecutor.submit(departmentsListDao::getAnyDepartment);
-        try {
-            anyDepartment = future.get();
-        } catch (InterruptedException | ExecutionException e) {
-                throw new RuntimeException("Error while checking if the DB is full or not");
-        }
+        Integer anyDepartment = countDepartments(departmentsListDao);
+
         if (anyDepartment < 101) {
             Log.d("[DEBUG][DepartmentDatabase]", "FillDB: Populating database.");
+
             JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null, response -> {
+
                 ArrayList<DepartmentsListEntity> departmentsListEntities = new ArrayList<>();
+
                 for (int i = 0; i < response.length(); i++) {
                     try {
                         JSONObject current = response.getJSONObject(i);
+
                         String departmentName = current.getString("nom");
                         String departmentCode = current.getString("code");
-                        Log.d("[DEBUG][DepartmentDatabase]", "onResponse: Create Department Entity.");
-                        Log.d("[DEBUG][DepartmentDatabase]", "onResponse: Department " + (i + 1) + " out of " + response.length() + ".");
+
+                        Log.d("[DEBUG][DepartmentDatabase]", "onResponse: Create Department Entity.\nDepartment " + (i + 1) + " out of " + response.length() + ".");
+
                         DepartmentsListEntity departmentEntity = new DepartmentsListEntity(departmentCode, departmentName);
                         departmentsListEntities.add(departmentEntity);
                     } catch (JSONException e) {
                         Log.e("[ERROR][DepartmentDatabase]", "onResponse: An error occurred when populating the database.");
+                        throw new RuntimeException("onResponse: An error occurred when populating the database.");
                     }
-
                 }
+                //Insert all departments in DB
                 Future<?> insertFuture = databaseWriteExecutor.submit(() -> departmentsListDao.insert(departmentsListEntities.toArray(new DepartmentsListEntity[response.length()])));
                 try {
                     insertFuture.get();
@@ -128,11 +128,25 @@ public abstract class DepartmentDatabase extends RoomDatabase {
             }, error -> {
                 throw new RuntimeException("Error while fetching the list of departments");
             });
+
             requestQueue.add(jsonArrayRequest);
         } else {
             Log.d("[DEBUG][DepartmentDatabase]", "FillDB: Database is full.");
         }
 
+    }
+
+    private Integer countDepartments(DepartmentsListDao departmentsListDao) {
+        Integer anyDepartment;
+        Future<Integer> future = databaseWriteExecutor.submit(departmentsListDao::getAnyDepartment);
+
+        try {
+            anyDepartment = future.get();
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException("Error while checking if the DB is full or not");
+        }
+
+        return anyDepartment;
     }
 
     public abstract DepartmentsDao departmentsDao();

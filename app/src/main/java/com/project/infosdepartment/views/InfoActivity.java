@@ -31,14 +31,13 @@ public class InfoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setTheme(R.style.Theme_AppCompat_Light_NoActionBar);
         setContentView(R.layout.activity_info);
+
         toolbar = findViewById(R.id.toolbar);
-
-
         Bundle extra = getIntent().getExtras();
         assert extra != null;
-
         String departmentCode = extra.getString("departmentCode");
-        Log.i("[DEBUG][INFO]", "Department Code: " + departmentCode);
+
+        Log.d("[DEBUG][INFO]", "Department Code: " + departmentCode);
 
         infoViewModel = new ViewModelProvider(this).get(InfoViewModel.class);
         int isDataFetched = infoViewModel.getIfDataFetched(departmentCode);
@@ -54,20 +53,17 @@ public class InfoActivity extends AppCompatActivity {
 
             //Sleep the thread and loop while the insertion hasn't been finished
             while (departmentEntity == null) {
-
                 departmentEntity = infoViewModel.getDepartmentInfo(departmentCode);
                 try {
                     Thread.sleep(10);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-
-                Log.i("[DEBUG][THREAD]", "Sleeping");
+                Log.d("[DEBUG][THREAD]", "Sleeping");
             }
 
             DepartmentEntity finalDepartmentEntity = departmentEntity;
             runOnUiThread(() -> {
-                //set up the UI
                 setUpUI(departmentCode, finalDepartmentEntity, this.toolbar);
 
             });
@@ -76,11 +72,13 @@ public class InfoActivity extends AppCompatActivity {
     }
 
     private void setUpUI(String departmentCode, DepartmentEntity finalDepartmentEntity, Toolbar toolbar) {
+
         String departmentCodeText = "Code départemental : " + finalDepartmentEntity.getDepartmentCode();
         String departmentInhabitants = "Population : " + finalDepartmentEntity.getInhabitants();
         String departmentTowns = "Nombre de communes : " + finalDepartmentEntity.getNbTowns();
         String departmentName = finalDepartmentEntity.getDepartmentName();
         String departmentNameText = "Département : " + departmentName;
+
         ((TextView) findViewById(R.id.departmentCode)).setText(departmentCodeText);
         ((TextView) findViewById(R.id.departmentInhabitants)).setText(departmentInhabitants);
         ((TextView) findViewById(R.id.departmentTowns)).setText(departmentTowns);
@@ -88,12 +86,14 @@ public class InfoActivity extends AppCompatActivity {
 
         RichPathView notificationsRichPathView = findViewById(R.id.departmentPosition);
         RichPath dept = notificationsRichPathView.findRichPathByName(String.valueOf(departmentCode));
+
         if (dept != null) {
             dept.setFillColor(Color.RED);
             notificationsRichPathView.setVisibility(View.VISIBLE);
         } else {
             ((ViewGroup) notificationsRichPathView.getParent()).removeView(notificationsRichPathView);
         }
+
         toolbar.setTitle("(" + departmentCode + ") " + departmentName);
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
