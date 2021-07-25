@@ -39,6 +39,14 @@ public class DepartmentRepositoryTest {
         } catch (RuntimeException e) {
             Assert.fail();
         }
+        if (departmentRepository.getIfDataFetched(code) == 0) {
+            Assert.fail();
+        }
+        code = "456";
+        try {
+            departmentRepository.getDepartmentInfo(code);
+        } catch (RuntimeException ignored) {
+        }
 
     }
 
