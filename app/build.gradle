@@ -72,5 +72,8 @@ dependencies {
 
     androidTestImplementation "androidx.test.ext:junit:$rootProject.androidxJunitVersion"
 
+    testImplementation "org.junit.jupiter:junit-jupiter:${junit5Version}"
+    testRuntimeOnly "org.junit.vintage:junit-vintage-engine:${junit5Version}"
+
 
 }

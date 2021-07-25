@@ -24,6 +24,7 @@ task clean(type: Delete) {
     delete rootProject.buildDir
 }
 ext {
+    junit5Version = "5.7.0"
     appCompatVersion = '1.3.0'
     constraintLayoutVersion = '2.0.4'
     coreTestingVersion = '2.1.0'
