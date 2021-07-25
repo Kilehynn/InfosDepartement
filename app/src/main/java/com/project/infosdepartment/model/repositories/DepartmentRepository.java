@@ -78,6 +78,7 @@ public class DepartmentRepository {
                 } catch (JSONException e) {
 
                     Log.e("[ERROR][FetchInfoCallback]", "onSuccess: An error occurred when converting an element from a JsonArray to a JsonObject.");
+                    throw new RuntimeException("onSuccess: An error occurred when converting an element from a JsonArray to a JsonObject.");
                 }
 
             }
@@ -91,7 +92,7 @@ public class DepartmentRepository {
             setTrueBoolDepartment(code);
         }, error ->
         {
-            // TODO: Handle error
+            throw new RuntimeException("Error while fetching the info about " + code + " from the API.");
         });
         requestQueue.add(jsonArrayRequest);
     }
@@ -112,7 +113,7 @@ public class DepartmentRepository {
         try {
             res = future.get();
         } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Error while getting the Department Entity from its code");
         }
         return res;
     }
@@ -124,7 +125,7 @@ public class DepartmentRepository {
         try {
             res = future.get();
         } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Error while getting all the DepartmentListEntity from the DB");
         }
         return res;
 
@@ -142,7 +143,7 @@ public class DepartmentRepository {
         try {
             res = future.get();
         } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Error while getting a DepartmentListEntity from its code");
         }
         return res;
     }
@@ -155,7 +156,7 @@ public class DepartmentRepository {
         try {
             future.get();
         } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Error while inserting a DepartmentEntity");
         }
     }
 
@@ -165,7 +166,7 @@ public class DepartmentRepository {
         try {
             res = future.get();
         } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Error while getting the result of the insertion of a DepartmentListEntity");
         }
         return res;
 
