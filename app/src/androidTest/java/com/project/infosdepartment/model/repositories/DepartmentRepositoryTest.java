@@ -6,12 +6,13 @@ import androidx.test.filters.LargeTest;
 
 import com.project.infosdepartment.model.database.entity.DepartmentsListEntity;
 
-import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @LargeTest
@@ -24,11 +25,6 @@ public class DepartmentRepositoryTest {
     @Before
     public void setUp() {
         departmentRepository = new DepartmentRepository(ApplicationProvider.getApplicationContext());
-    }
-
-    @After
-    public void clean() {
-        departmentRepository.resetCache();
     }
 
     @Test
@@ -82,6 +78,7 @@ public class DepartmentRepositoryTest {
 
     @Test
     public void testGetDepartment() {
+        departmentRepository.resetCache();
         String code = "78";
         Integer zero = 0;
         try {
@@ -100,10 +97,10 @@ public class DepartmentRepositoryTest {
     }
 
     @Test
-    void testResetCache() {
+    public void testResetCache() {
         Integer zero = 0;
-        for (int i = 8; i < 15; i++) {
-            String code = Integer.toString(i);
+        List<String> departmentCodes = new ArrayList<>(Arrays.asList("08", "09", "10", "11", "12", "13", "14", "15"));
+        for (String code : departmentCodes) {
             departmentRepository.getDepartmentInfo(code);
         }
         departmentRepository.resetCache();
